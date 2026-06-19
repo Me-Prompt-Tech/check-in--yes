@@ -16,15 +16,6 @@ interface Employee {
   forcePasswordChange: boolean;
 }
 
-const INITIAL_EMPLOYEES: Employee[] = [
-  { id: 'EMP001', firstName: 'สมชาย', lastName: 'รักดี', role: 'Frontend Developer', department: 'Engineering', username: 'somchai.r', status: 'active', createdDate: '2026-01-10', forcePasswordChange: false },
-  { id: 'EMP002', firstName: 'วิภาดา', lastName: 'รุ่งเรือง', role: 'HR Manager', department: 'HR', username: 'wiphada.r', status: 'active', createdDate: '2026-02-15', forcePasswordChange: false },
-  { id: 'EMP003', firstName: 'อนันต์', lastName: 'ทรงคุณ', role: 'UI/UX Designer', department: 'Design', username: 'anant.s', status: 'active', createdDate: '2026-03-01', forcePasswordChange: true },
-  { id: 'EMP004', firstName: 'เกศรา', lastName: 'คำใส', role: 'Marketing Specialist', department: 'Marketing', username: 'ketsara.k', status: 'active', createdDate: '2026-03-12', forcePasswordChange: false },
-  { id: 'EMP005', firstName: 'ประพันธ์', lastName: 'ดำรง', role: 'Backend Developer', department: 'Engineering', username: 'praphan.d', status: 'suspended', createdDate: '2026-04-18', forcePasswordChange: false },
-  { id: 'EMP006', firstName: 'ธนพล', lastName: 'มณีรัตน์', role: 'Sales Executive', department: 'Sales', username: 'thanapol.m', status: 'active', createdDate: '2026-05-02', forcePasswordChange: false },
-];
-
 export default function EmployeeManagement() {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
@@ -54,24 +45,15 @@ export default function EmployeeManagement() {
   const [validationError, setValidationError] = useState('');
 
   // ----------------------------------------------------
-  // API CONNECTIVITY STUBS (To be replaced with actual backend calls later)
+  // SERVER ACTION CALLS (MongoDB via Prisma)
   // ----------------------------------------------------
 
   // 1. Fetch Employees
   const fetchEmployees = async () => {
     try {
-      // API call placeholder:
-      // const response = await fetch('/api/admin/employees');
-      // const data = await response.json();
-      // setEmployees(data);
-      
-      const localData = localStorage.getItem('employee_db');
-      if (localData) {
-        setEmployees(JSON.parse(localData));
-      } else {
-        localStorage.setItem('employee_db', JSON.stringify(INITIAL_EMPLOYEES));
-        setEmployees(INITIAL_EMPLOYEES);
-      }
+      const { fetchEmployeesAction } = await import('../../actions/employees');
+      const data = await fetchEmployeesAction();
+      setEmployees(data as Employee[]);
     } catch (err) {
       console.error('Error fetching employees:', err);
     }
@@ -80,18 +62,13 @@ export default function EmployeeManagement() {
   // 2. Create Employee
   const createEmployee = async (newEmp: Employee) => {
     try {
-      // API call placeholder:
-      // const response = await fetch('/api/admin/employees', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(newEmp)
-      // });
-      // if (!response.ok) throw new Error('Failed to create');
-      
-      const updatedList = [newEmp, ...employees];
-      setEmployees(updatedList);
-      localStorage.setItem('employee_db', JSON.stringify(updatedList));
-      return { success: true };
+      const { createEmployeeAction } = await import('../../actions/employees');
+      const result = await createEmployeeAction({ ...newEmp, roleType: 'employee' } as any);
+      if (result.success) {
+        await fetchEmployees();
+        return { success: true };
+      }
+      return { success: false, error: result.error };
     } catch (err) {
       console.error('Error creating employee:', err);
       return { success: false, error: 'ไม่สามารถสร้างบัญชีพนักงานได้' };
@@ -101,17 +78,9 @@ export default function EmployeeManagement() {
   // 3. Update Employee
   const updateEmployee = async (updatedEmp: Employee) => {
     try {
-      // API call placeholder:
-      // const response = await fetch(`/api/admin/employees/${updatedEmp.id}`, {
-      //   method: 'PUT',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(updatedEmp)
-      // });
-      // if (!response.ok) throw new Error('Failed to update');
-
-      const updatedList = employees.map(emp => emp.id === updatedEmp.id ? updatedEmp : emp);
-      setEmployees(updatedList);
-      localStorage.setItem('employee_db', JSON.stringify(updatedList));
+      const { updateEmployeeAction } = await import('../../actions/employees');
+      await updateEmployeeAction(updatedEmp as any);
+      await fetchEmployees();
       return { success: true };
     } catch (err) {
       console.error('Error updating employee:', err);
@@ -122,22 +91,9 @@ export default function EmployeeManagement() {
   // 4. Reset Password
   const resetPassword = async (empId: string, newPass: string, forceReset: boolean) => {
     try {
-      // API call placeholder:
-      // const response = await fetch(`/api/admin/employees/${empId}/reset-password`, {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({ password: newPass, forceReset })
-      // });
-      // if (!response.ok) throw new Error('Failed to reset');
-
-      const updatedList = employees.map(emp => {
-        if (emp.id === empId) {
-          return { ...emp, forcePasswordChange: forceReset };
-        }
-        return emp;
-      });
-      setEmployees(updatedList);
-      localStorage.setItem('employee_db', JSON.stringify(updatedList));
+      const { resetPasswordAction } = await import('../../actions/employees');
+      await resetPasswordAction(empId, newPass, forceReset);
+      await fetchEmployees();
       return { success: true };
     } catch (err) {
       console.error('Error resetting password:', err);
@@ -148,15 +104,9 @@ export default function EmployeeManagement() {
   // 5. Delete Employee
   const deleteEmployee = async (empId: string) => {
     try {
-      // API call placeholder:
-      // const response = await fetch(`/api/admin/employees/${empId}`, {
-      //   method: 'DELETE'
-      // });
-      // if (!response.ok) throw new Error('Failed to delete');
-
-      const updatedList = employees.filter(emp => emp.id !== empId);
-      setEmployees(updatedList);
-      localStorage.setItem('employee_db', JSON.stringify(updatedList));
+      const { deleteEmployeeAction } = await import('../../actions/employees');
+      await deleteEmployeeAction(empId);
+      await fetchEmployees();
       return { success: true };
     } catch (err) {
       console.error('Error deleting employee:', err);

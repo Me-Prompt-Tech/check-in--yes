@@ -55,16 +55,7 @@ export default function LoginPage() {
     });
   };
 
-  const fillCredentials = (userType: 'admin' | 'employee') => {
-    if (userType === 'admin') {
-      setUsername('admin');
-      setPassword('password');
-    } else {
-      setUsername('employee');
-      setPassword('password');
-    }
-    setError('');
-  };
+
 
   if (checkingAuth) {
     return (
@@ -192,28 +183,7 @@ export default function LoginPage() {
           </button>
         </form>
 
-        {/* Quick Testing Options */}
-        <div className="mt-8 pt-6 border-t border-slate-800/80">
-          <p className="text-center text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">
-            ทดลองเข้าสู่ระบบ (Quick Test)
-          </p>
-          <div className="grid grid-cols-2 gap-3">
-            <button
-              onClick={() => fillCredentials('admin')}
-              className="flex items-center justify-center gap-1.5 px-3 py-2 bg-slate-950/40 hover:bg-slate-950/80 border border-slate-850 rounded-xl text-xs font-medium text-slate-300 transition hover:border-slate-700 cursor-pointer"
-            >
-              <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
-              สิทธิ์ Admin
-            </button>
-            <button
-              onClick={() => fillCredentials('employee')}
-              className="flex items-center justify-center gap-1.5 px-3 py-2 bg-slate-950/40 hover:bg-slate-950/80 border border-slate-850 rounded-xl text-xs font-medium text-slate-300 transition hover:border-slate-700 cursor-pointer"
-            >
-              <span className="w-2 h-2 rounded-full bg-blue-500"></span>
-              สิทธิ์พนักงาน
-            </button>
-          </div>
-        </div>
+
 
         {/* Footer */}
         <div className="mt-6 text-center text-xs text-slate-600">
