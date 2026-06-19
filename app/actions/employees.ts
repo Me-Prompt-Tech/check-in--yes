@@ -90,7 +90,7 @@ export async function fetchEmployeesAction(): Promise<DBEmployee[]> {
     orderBy: { id: 'asc' }
   });
     
-  return list.map(item => ({
+  return list.map((item: any) => ({
     id: item.id,
     firstName: item.firstName,
     lastName: item.lastName,
@@ -198,13 +198,13 @@ export async function fetchAttendanceTodayAction() {
     where: { date: today }
   });
     
-  const logsMap = new Map(logs.map(log => [log.employeeId, log]));
+  const logsMap = new Map(logs.map((log: any) => [log.employeeId, log]));
   
   // Combine lists
   const COLOR_OPTIONS = ['bg-indigo-500', 'bg-emerald-500', 'bg-amber-500', 'bg-pink-500', 'bg-violet-500', 'bg-rose-500', 'bg-sky-500', 'bg-teal-500'];
   
-  return activeEmployees.map((emp, index) => {
-    const log = logsMap.get(emp.id);
+  return activeEmployees.map((emp: any, index: number) => {
+    const log: any = logsMap.get(emp.id);
     return {
       id: emp.id,
       name: `${emp.firstName} ${emp.lastName}`,
@@ -232,7 +232,7 @@ export async function fetchEmployeeLogsAction(empId: string) {
     
   const dayNames = ['อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์'];
   
-  return list.map(item => {
+  return list.map((item: any) => {
     const parts = item.date.split('-');
     const dateObj = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
     const dayName = dayNames[dateObj.getDay()];
@@ -353,8 +353,8 @@ export async function fetchAttendanceReportAction(
     select: { id: true, firstName: true, lastName: true, department: true }
   });
   
-  const employeeIds = employeesList.map(e => e.id);
-  const employeeMap = new Map(employeesList.map(e => [e.id, e]));
+  const employeeIds = employeesList.map((e: any) => e.id);
+  const employeeMap = new Map(employeesList.map((e: any) => [e.id, e]));
 
   // Build date query
   const dateQuery: any = {};
@@ -381,8 +381,8 @@ export async function fetchAttendanceReportAction(
     orderBy: [{ date: 'desc' }, { employeeId: 'asc' }]
   });
 
-  return logs.map(log => {
-    const emp = employeeMap.get(log.employeeId);
+  return logs.map((log: any) => {
+    const emp: any = employeeMap.get(log.employeeId);
     return {
       id: log.id,
       date: log.date,
