@@ -4,13 +4,15 @@ import { cookies } from 'next/headers';
 const COOKIE_NAME = 'user_session';
 
 export interface SessionData {
+  userId: string;
   username: string;
+  displayName: string;
   role: 'admin' | 'employee';
 }
 
-export async function createSession(username: string, role: 'admin' | 'employee') {
+export async function createSession(userId: string, username: string, displayName: string, role: 'admin' | 'employee') {
   const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
-  const sessionData: SessionData = { username, role };
+  const sessionData: SessionData = { userId, username, displayName, role };
   const serialized = Buffer.from(JSON.stringify(sessionData)).toString('base64');
   
   const cookieStore = await cookies();
@@ -35,7 +37,7 @@ export async function getSession(): Promise<SessionData | null> {
     const decoded = Buffer.from(sessionCookie.value, 'base64').toString('utf-8');
     const parsed = JSON.parse(decoded) as SessionData;
     
-    if (parsed && parsed.username && (parsed.role === 'admin' || parsed.role === 'employee')) {
+    if (parsed && parsed.userId && parsed.username && (parsed.role === 'admin' || parsed.role === 'employee')) {
       return parsed;
     }
   } catch (error) {
