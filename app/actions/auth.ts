@@ -25,41 +25,20 @@ export async function loginAction(formData: FormData): Promise<AuthResponse> {
   const creds = getCredentials();
 
   // Admin login check
-  if (username.toLowerCase() === creds.admin.username && password === creds.admin.password) {
+  if (usernameInput.toLowerCase() === creds.admin.username && passwordInput === creds.admin.password) {
     await createSession(creds.admin.displayName, 'admin');
     return { success: true, role: 'admin' };
   }
 
   // Employee login check
-  if (username.toLowerCase() === creds.employee.username && password === creds.employee.password) {
+  if (usernameInput.toLowerCase() === creds.employee.username && passwordInput === creds.employee.password) {
     await createSession(creds.employee.displayName, 'employee');
     return { success: true, role: 'employee' };
   }
 
-    if (!user) {
-      return { success: false, error: 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง' };
-    }
-
-    if (user.status !== 'active') {
-      return { success: false, error: 'บัญชีผู้ใช้ของคุณถูกระงับการใช้งาน' };
-    }
-
-    // Direct password match (in real prod, use bcrypt)
-    if (user.password !== passwordInput) {
-      return { success: false, error: 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง' };
-    }
-
-    const displayName = `${user.firstName} ${user.lastName}`;
-    const roleType = user.roleType as 'admin' | 'employee' || 'employee';
-
-    await createSession(displayName, roleType);
-
-    return { success: true, role: roleType };
-  } catch (err) {
-    console.error('Login database query error:', err);
-    return { success: false, error: 'เกิดข้อผิดพลาดในการเชื่อมต่อฐานข้อมูล' };
-  }
+  return { success: false, error: 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง' };
 }
+
 
 export async function logoutAction() {
   await deleteSession();
