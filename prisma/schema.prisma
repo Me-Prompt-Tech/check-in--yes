@@ -35,3 +35,10 @@ model Attendance {
 
   @@map("attendance")
 }
+
+model Department {
+  id    String @id @default(auto()) @map("_id") @db.ObjectId
+  name  String @unique
+  
+  @@map("departments")
+}

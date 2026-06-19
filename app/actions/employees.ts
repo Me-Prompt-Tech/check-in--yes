@@ -87,7 +87,6 @@ async function ensureDbSeeded() {
 export async function fetchEmployeesAction(): Promise<DBEmployee[]> {
   await ensureDbSeeded();
   const list = await prisma.employee.findMany({
-    where: { roleType: { not: 'admin' } },
     orderBy: { id: 'asc' }
   });
     
@@ -100,7 +99,8 @@ export async function fetchEmployeesAction(): Promise<DBEmployee[]> {
     username: item.username,
     status: item.status,
     createdDate: item.createdDate,
-    forcePasswordChange: item.forcePasswordChange
+    forcePasswordChange: item.forcePasswordChange,
+    roleType: item.roleType
   })) as DBEmployee[];
 }
 
@@ -127,7 +127,7 @@ export async function createEmployeeAction(emp: DBEmployee) {
       role: emp.role,
       username: emp.username,
       password: 'password', // Default password
-      roleType: 'employee',
+      roleType: emp.roleType || 'employee',
       status: emp.status,
       createdDate: emp.createdDate,
       forcePasswordChange: emp.forcePasswordChange
@@ -149,7 +149,8 @@ export async function updateEmployeeAction(emp: DBEmployee) {
       department: emp.department,
       role: emp.role,
       username: emp.username,
-      status: emp.status
+      status: emp.status,
+      roleType: emp.roleType
     }
   });
   
@@ -332,3 +333,68 @@ export async function punchAttendanceAction(empId: string, type: 'morning' | 'lu
   
   return { success: true, formattedTime };
 }
+
+// 10. Fetch Attendance Report with Filters
+export async function fetchAttendanceReportAction(
+  startDate?: string,
+  endDate?: string,
+  departmentFilter?: string
+) {
+  await ensureDbSeeded();
+
+  // Fetch employees matching the department filter
+  const employeesQuery: any = { roleType: { not: 'admin' } };
+  if (departmentFilter && departmentFilter !== 'All') {
+    employeesQuery.department = departmentFilter;
+  }
+  
+  const employeesList = await prisma.employee.findMany({
+    where: employeesQuery,
+    select: { id: true, firstName: true, lastName: true, department: true }
+  });
+  
+  const employeeIds = employeesList.map(e => e.id);
+  const employeeMap = new Map(employeesList.map(e => [e.id, e]));
+
+  // Build date query
+  const dateQuery: any = {};
+  if (startDate && endDate) {
+    dateQuery.gte = startDate;
+    dateQuery.lte = endDate;
+  } else if (startDate) {
+    dateQuery.gte = startDate;
+  } else if (endDate) {
+    dateQuery.lte = endDate;
+  }
+
+  const attendanceQuery: any = {
+    employeeId: { in: employeeIds }
+  };
+  
+  if (Object.keys(dateQuery).length > 0) {
+    attendanceQuery.date = dateQuery;
+  }
+
+  // Fetch attendance logs
+  const logs = await prisma.attendance.findMany({
+    where: attendanceQuery,
+    orderBy: [{ date: 'desc' }, { employeeId: 'asc' }]
+  });
+
+  return logs.map(log => {
+    const emp = employeeMap.get(log.employeeId);
+    return {
+      id: log.id,
+      date: log.date,
+      employeeId: log.employeeId,
+      name: emp ? `${emp.firstName} ${emp.lastName}` : 'Unknown',
+      department: emp ? emp.department : 'Unknown',
+      morningIn: log.morningIn,
+      lunchBreak: log.lunchBreak,
+      afternoonIn: log.afternoonIn,
+      leaveWork: log.leaveWork,
+      status: log.status
+    };
+  });
+}
+

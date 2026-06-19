@@ -3,6 +3,8 @@
 import React, { useState, useEffect, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { checkCurrentSession, logoutAction } from '../../actions/auth';
+import { fetchEmployeesAction, deleteEmployeeAction, createEmployeeAction, updateEmployeeAction } from '../../actions/employees';
+import { fetchDepartmentsAction, DBDepartment } from '../../actions/departments';
 
 interface Employee {
   id: string;
@@ -14,6 +16,7 @@ interface Employee {
   status: 'active' | 'suspended'; // ใช้งาน / ระงับ
   createdDate: string;
   forcePasswordChange: boolean;
+  roleType?: 'admin' | 'employee';
 }
 
 export default function EmployeeManagement() {
@@ -26,6 +29,7 @@ export default function EmployeeManagement() {
   const [search, setSearch] = useState('');
   const [deptFilter, setDeptFilter] = useState('All');
   const [statusFilter, setStatusFilter] = useState('All');
+  const [deptOptions, setDeptOptions] = useState<DBDepartment[]>([]);
 
   // Modal States
   const [activeModal, setActiveModal] = useState<'none' | 'add' | 'edit' | 'view' | 'reset-password' | 'delete'>('none');
@@ -41,6 +45,7 @@ export default function EmployeeManagement() {
   const [formPassword, setFormPassword] = useState('');
   const [formConfirmPassword, setFormConfirmPassword] = useState('');
   const [formStatus, setFormStatus] = useState<'active' | 'suspended'>('active');
+  const [formRoleType, setFormRoleType] = useState<'admin' | 'employee'>('employee');
   const [formForceReset, setFormForceReset] = useState(true);
   const [validationError, setValidationError] = useState('');
 
@@ -51,7 +56,6 @@ export default function EmployeeManagement() {
   // 1. Fetch Employees
   const fetchEmployees = async () => {
     try {
-      const { fetchEmployeesAction } = await import('../../actions/employees');
       const data = await fetchEmployeesAction();
       setEmployees(data as Employee[]);
     } catch (err) {
@@ -62,8 +66,7 @@ export default function EmployeeManagement() {
   // 2. Create Employee
   const createEmployee = async (newEmp: Employee) => {
     try {
-      const { createEmployeeAction } = await import('../../actions/employees');
-      const result = await createEmployeeAction({ ...newEmp, roleType: 'employee' } as any);
+      const result = await createEmployeeAction(newEmp as any);
       if (result.success) {
         await fetchEmployees();
         return { success: true };
@@ -78,7 +81,6 @@ export default function EmployeeManagement() {
   // 3. Update Employee
   const updateEmployee = async (updatedEmp: Employee) => {
     try {
-      const { updateEmployeeAction } = await import('../../actions/employees');
       await updateEmployeeAction(updatedEmp as any);
       await fetchEmployees();
       return { success: true };
@@ -104,7 +106,6 @@ export default function EmployeeManagement() {
   // 5. Delete Employee
   const deleteEmployee = async (empId: string) => {
     try {
-      const { deleteEmployeeAction } = await import('../../actions/employees');
       await deleteEmployeeAction(empId);
       await fetchEmployees();
       return { success: true };
@@ -118,16 +119,25 @@ export default function EmployeeManagement() {
 
   // Security guard check
   useEffect(() => {
-    async function verifyAdmin() {
+    async function init() {
       const session = await checkCurrentSession();
       if (!session || session.role !== 'admin') {
         router.push('/');
-      } else {
-        setAuthLoading(false);
-        fetchEmployees();
+        return;
       }
+      setAuthLoading(false);
+      
+      // Load departments first, then employees
+      try {
+        const depts = await fetchDepartmentsAction();
+        setDeptOptions(depts);
+      } catch (err) {
+        console.error('Failed to load departments', err);
+      }
+
+      fetchEmployees();
     }
-    verifyAdmin();
+    init();
   }, [router]);
 
   const handleLogout = () => {
@@ -163,6 +173,7 @@ export default function EmployeeManagement() {
     setFormPassword('');
     setFormConfirmPassword('');
     setFormStatus('active');
+    setFormRoleType('employee');
     setFormForceReset(true);
     setActiveModal('add');
   };
@@ -177,6 +188,7 @@ export default function EmployeeManagement() {
     setFormRole(emp.role);
     setFormUsername(emp.username);
     setFormStatus(emp.status);
+    setFormRoleType(emp.roleType || 'employee');
     setActiveModal('edit');
   };
 
@@ -228,7 +240,8 @@ export default function EmployeeManagement() {
       username: formUsername,
       status: formStatus,
       createdDate: new Date().toISOString().split('T')[0],
-      forcePasswordChange: formForceReset
+      forcePasswordChange: formForceReset,
+      roleType: formRoleType
     };
 
     const res = await createEmployee(newEmp);
@@ -258,7 +271,8 @@ export default function EmployeeManagement() {
       department: formDepartment,
       role: formRole,
       username: formUsername,
-      status: formStatus
+      status: formStatus,
+      roleType: formRoleType
     };
 
     const res = await updateEmployee(updatedEmp);
@@ -334,7 +348,7 @@ export default function EmployeeManagement() {
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
               </svg>
-              ลงชื่อการเข้างานวันนี้
+              ภาพรวมการเข้างาน
             </a>
             <a 
               href="#"
@@ -347,15 +361,13 @@ export default function EmployeeManagement() {
               จัดการข้อมูลพนักงาน
             </a>
             <a 
-              href="#" 
-              onClick={(e) => e.preventDefault()}
+              href="/admin/reports" 
               className="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 rounded-lg text-sm font-medium transition"
             >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
-              การตั้งค่าระบบ
+              ออกรายงาน
             </a>
           </nav>
         </div>
@@ -437,11 +449,9 @@ export default function EmployeeManagement() {
               className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-slate-300 focus:outline-none focus:border-indigo-500 cursor-pointer"
             >
               <option value="All">ทุกแผนก (All)</option>
-              <option value="Engineering">Engineering</option>
-              <option value="HR">HR</option>
-              <option value="Marketing">Marketing</option>
-              <option value="Sales">Sales</option>
-              <option value="Design">Design</option>
+              {deptOptions.map(dept => (
+                <option key={dept.id} value={dept.name}>{dept.name}</option>
+              ))}
             </select>
           </div>
 
@@ -470,6 +480,7 @@ export default function EmployeeManagement() {
                   <th className="py-4 px-4">แผนก</th>
                   <th className="py-4 px-4">ตำแหน่ง</th>
                   <th className="py-4 px-4">Username</th>
+                  <th className="py-4 px-4">สิทธิ์ระบบ</th>
                   <th className="py-4 px-4">สถานะ</th>
                   <th className="py-4 px-4">วันที่สร้างบัญชี</th>
                   <th className="py-4 px-4 text-center">จัดการ</th>
@@ -484,6 +495,15 @@ export default function EmployeeManagement() {
                       <td className="py-4 px-4 text-slate-300">{emp.department}</td>
                       <td className="py-4 px-4 text-slate-400">{emp.role}</td>
                       <td className="py-4 px-4 font-mono text-slate-400">{emp.username}</td>
+                      <td className="py-4 px-4">
+                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider border ${
+                          emp.roleType === 'admin' 
+                            ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' 
+                            : 'bg-slate-500/10 text-slate-400 border-slate-500/20'
+                        }`}>
+                          {emp.roleType === 'admin' ? 'แอดมิน' : 'พนักงาน'}
+                        </span>
+                      </td>
                       <td className="py-4 px-4">
                         <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold border ${
                           emp.status === 'active' 
@@ -613,11 +633,9 @@ export default function EmployeeManagement() {
                     onChange={(e) => setFormDepartment(e.target.value as any)}
                     className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-sm text-slate-300 focus:outline-none focus:border-indigo-500 cursor-pointer"
                   >
-                    <option value="Engineering">Engineering</option>
-                    <option value="HR">HR</option>
-                    <option value="Marketing">Marketing</option>
-                    <option value="Sales">Sales</option>
-                    <option value="Design">Design</option>
+                    {deptOptions.map(dept => (
+                      <option key={dept.id} value={dept.name}>{dept.name}</option>
+                    ))}
                   </select>
                 </div>
                 <div>
@@ -677,6 +695,29 @@ export default function EmployeeManagement() {
                         className="text-indigo-600 bg-slate-950 border-slate-850 focus:ring-0 focus:ring-offset-0"
                       />
                       ระงับ (Suspended)
+                    </label>
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-slate-400 mb-1">สิทธิ์การใช้งานระบบ</label>
+                  <div className="flex gap-4 mt-1">
+                    <label className="flex items-center gap-1.5 text-xs text-slate-300 cursor-pointer">
+                      <input
+                        type="radio"
+                        checked={formRoleType === 'employee'}
+                        onChange={() => setFormRoleType('employee')}
+                        className="text-indigo-600 bg-slate-950 border-slate-850 focus:ring-0 focus:ring-offset-0"
+                      />
+                      พนักงาน (Employee)
+                    </label>
+                    <label className="flex items-center gap-1.5 text-xs text-slate-300 cursor-pointer">
+                      <input
+                        type="radio"
+                        checked={formRoleType === 'admin'}
+                        onChange={() => setFormRoleType('admin')}
+                        className="text-indigo-600 bg-slate-950 border-slate-850 focus:ring-0 focus:ring-offset-0"
+                      />
+                      แอดมิน (Admin)
                     </label>
                   </div>
                 </div>
@@ -783,11 +824,9 @@ export default function EmployeeManagement() {
                     onChange={(e) => setFormDepartment(e.target.value as any)}
                     className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-sm text-slate-300 focus:outline-none focus:border-indigo-500 cursor-pointer"
                   >
-                    <option value="Engineering">Engineering</option>
-                    <option value="HR">HR</option>
-                    <option value="Marketing">Marketing</option>
-                    <option value="Sales">Sales</option>
-                    <option value="Design">Design</option>
+                    {deptOptions.map(dept => (
+                      <option key={dept.id} value={dept.name}>{dept.name}</option>
+                    ))}
                   </select>
                 </div>
                 <div>
@@ -822,6 +861,30 @@ export default function EmployeeManagement() {
                       className="text-indigo-600 bg-slate-950 border-slate-850 focus:ring-0"
                     />
                     ระงับ (Suspended)
+                  </label>
+                </div>
+              </div>
+
+              <div className="py-2 border-t border-slate-800/60 pt-4">
+                <label className="block text-xs font-semibold text-slate-400 mb-1.5">สิทธิ์การใช้งานระบบ</label>
+                <div className="flex gap-4">
+                  <label className="flex items-center gap-1.5 text-xs text-slate-300 cursor-pointer">
+                    <input
+                      type="radio"
+                      checked={formRoleType === 'employee'}
+                      onChange={() => setFormRoleType('employee')}
+                      className="text-indigo-600 bg-slate-950 border-slate-850 focus:ring-0"
+                    />
+                    พนักงาน (Employee)
+                  </label>
+                  <label className="flex items-center gap-1.5 text-xs text-slate-300 cursor-pointer">
+                    <input
+                      type="radio"
+                      checked={formRoleType === 'admin'}
+                      onChange={() => setFormRoleType('admin')}
+                      className="text-indigo-600 bg-slate-950 border-slate-850 focus:ring-0"
+                    />
+                    แอดมิน (Admin)
                   </label>
                 </div>
               </div>
@@ -874,6 +937,16 @@ export default function EmployeeManagement() {
               <div className="flex items-center justify-between py-1 border-b border-slate-850/40">
                 <span className="text-slate-400 text-xs">Username</span>
                 <span className="font-mono text-slate-250">{selectedEmployee.username}</span>
+              </div>
+              <div className="flex items-center justify-between py-1 border-b border-slate-850/40">
+                <span className="text-slate-400 text-xs">สิทธิ์ระบบ</span>
+                <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-xs font-semibold ${
+                  selectedEmployee.roleType === 'admin' 
+                    ? 'bg-amber-500/15 text-amber-400' 
+                    : 'bg-slate-500/15 text-slate-400'
+                }`}>
+                  {selectedEmployee.roleType === 'admin' ? 'แอดมิน (Admin)' : 'พนักงาน (Employee)'}
+                </span>
               </div>
               <div className="flex items-center justify-between py-1 border-b border-slate-850/40">
                 <span className="text-slate-400 text-xs">สถานะ</span>
