@@ -24,3 +24,33 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Light Mode Overrides */
+html.light body {
+  --background: #f8fafc;
+  --foreground: #0f172a;
+}
+html.light .bg-slate-950 { background-color: #f8fafc !important; }
+html.light .bg-slate-900 { background-color: #f1f5f9 !important; }
+html.light .bg-slate-800 { background-color: #e2e8f0 !important; }
+html.light .bg-slate-700 { background-color: #cbd5e1 !important; }
+html.light .border-slate-800 { border-color: #e2e8f0 !important; }
+html.light .border-slate-700 { border-color: #cbd5e1 !important; }
+html.light .text-slate-100 { color: #0f172a !important; }
+html.light .text-slate-200 { color: #1e293b !important; }
+html.light .text-slate-300 { color: #334155 !important; }
+html.light .text-slate-400 { color: #475569 !important; }
+html.light .text-slate-500 { color: #64748b !important; }
+html.light .divide-slate-800 { border-color: #e2e8f0 !important; }
+html.light .divide-slate-800\/60 > * { border-color: #e2e8f099 !important; }
+html.light .divide-slate-800\/40 > * { border-color: #e2e8f066 !important; }
+html.light .bg-slate-800\/60 { background-color: #e2e8f099 !important; }
+html.light .bg-slate-800\/50 { background-color: #e2e8f080 !important; }
+html.light .bg-slate-800\/30 { background-color: #e2e8f04d !important; }
+html.light .bg-slate-950\/50 { background-color: #f8fafc80 !important; }
+html.light .hover\:bg-slate-800:hover { background-color: #e2e8f0 !important; }
+html.light .hover\:bg-slate-700:hover { background-color: #cbd5e1 !important; }
+html.light .hover\:bg-slate-800\/50:hover { background-color: #e2e8f080 !important; }
+html.light .hover\:bg-slate-800\/30:hover { background-color: #e2e8f04d !important; }
+html.light .hover\:bg-slate-850\/35:hover { background-color: #cbd5e159 !important; }
+html.light .bg-slate-850\/35 { background-color: #cbd5e159 !important; }

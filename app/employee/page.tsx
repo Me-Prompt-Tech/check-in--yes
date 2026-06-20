@@ -4,6 +4,7 @@ import React, { useState, useEffect, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { checkCurrentSession, logoutAction } from '../actions/auth';
 import { fetchEmployeesAction } from '../actions/employees';
+import { ThemeToggle } from '../components/ThemeToggle';
 
 interface AttendanceLog {
   date: string;
@@ -277,14 +278,17 @@ export default function EmployeeDashboard() {
       <aside className="w-full lg:w-64 bg-slate-900 border-b lg:border-b-0 lg:border-r border-slate-800 p-6 flex flex-col justify-between shrink-0">
         <div>
           {/* Profile Card */}
-          <div className="flex items-center gap-3 mb-8">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center font-bold text-white shadow-md text-sm uppercase">
-              {empName ? empName.charAt(0) : 'E'}
+          <div className="flex items-center justify-between w-full mb-8">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center font-bold text-white shadow-md text-sm uppercase">
+                {empName ? empName.charAt(0) : 'E'}
+              </div>
+              <div>
+                <h2 className="font-extrabold tracking-tight text-sm text-slate-100">{empName || 'กำลังโหลด...'}</h2>
+                <span className="text-xs text-slate-500">พนักงาน</span>
+              </div>
             </div>
-            <div>
-              <h2 className="font-extrabold tracking-tight text-sm text-slate-100">{empName || 'กำลังโหลด...'}</h2>
-              <span className="text-xs text-slate-500">พนักงาน</span>
-            </div>
+            <ThemeToggle />
           </div>
 
           {/* Navigation Links */}

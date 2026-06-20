@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { checkCurrentSession, logoutAction } from '../actions/auth';
+import { ThemeToggle } from '../components/ThemeToggle';
 
 interface EmployeeLog {
   id: string;
@@ -168,14 +169,17 @@ export default function AdminDashboard() {
       <aside className="w-full md:w-64 bg-slate-900 border-b md:border-b-0 md:border-r border-slate-800 p-6 flex flex-col justify-between shrink-0">
         <div>
           {/* Brand Logo */}
-          <div className="flex items-center gap-3 mb-8">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center font-bold text-white shadow-md">
-              A
+          <div className="flex items-center justify-between w-full mb-8">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center font-bold text-white shadow-md">
+                A
+              </div>
+              <div>
+                <h2 className="font-extrabold tracking-tight text-md">AttendHub</h2>
+                <span className="text-xs text-slate-500 font-semibold uppercase tracking-wider">แผงควบคุมแอดมิน</span>
+              </div>
             </div>
-            <div>
-              <h2 className="font-extrabold tracking-tight text-md">AttendHub</h2>
-              <span className="text-xs text-slate-500 font-semibold uppercase tracking-wider">แผงควบคุมแอดมิน</span>
-            </div>
+            <ThemeToggle />
           </div>
 
           {/* Navigation Links */}

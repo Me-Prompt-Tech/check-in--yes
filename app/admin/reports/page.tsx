@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { checkCurrentSession, logoutAction } from '../../actions/auth';
 import { fetchAttendanceReportAction } from '../../actions/employees';
 import { fetchDepartmentsAction, DBDepartment } from '../../actions/departments';
+import { ThemeToggle } from '../../components/ThemeToggle';
 
 interface ReportLog {
   id: string;
@@ -153,14 +154,17 @@ export default function ReportsPage() {
       
       {/* Sidebar */}
       <aside className="w-full lg:w-72 bg-slate-900 border-b lg:border-b-0 lg:border-r border-slate-800 p-6 flex flex-col shrink-0">
-        <div className="flex items-center gap-3 mb-10">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center font-bold shadow-lg shadow-indigo-500/20 text-white">
-            A
+        <div className="flex items-center justify-between w-full mb-10">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center font-bold shadow-lg shadow-indigo-500/20 text-white">
+              A
+            </div>
+            <div>
+              <h2 className="font-bold tracking-tight text-md">AttendHub</h2>
+              <span className="text-xs text-slate-400 font-medium">Admin Portal</span>
+            </div>
           </div>
-          <div>
-            <h2 className="font-bold tracking-tight text-md">AttendHub</h2>
-            <span className="text-xs text-slate-400 font-medium">Admin Portal</span>
-          </div>
+          <ThemeToggle />
         </div>
 
         <nav className="flex-1 space-y-2">
