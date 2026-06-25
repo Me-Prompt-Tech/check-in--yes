@@ -330,8 +330,8 @@ export default function EmployeeDashboard() {
               const pState = nowDate ? getPeriodState(period.id as any, nowDate) : { label: 'กำลังตรวจสอบ...', status: 'upcoming', active: false };
               const isChecked = period.state.time !== '-';
 
-              // ซ่อนการ์ดที่ยังไม่ถึงเวลาและยังไม่ได้บันทึก
-              if (pState.status === 'upcoming' && !isChecked) return null;
+              // ซ่อนการ์ดที่เลยกำหนด หรือ ยังไม่ถึงกำหนด
+              if (pState.status === 'upcoming' || pState.status === 'late') return null;
 
               return (
                 <div 
