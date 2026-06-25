@@ -1,0 +1,21 @@
+services:
+  app:
+    build: .
+    ports:
+      - "7081:7081"
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+    depends_on:
+      - mongo
+    restart: unless-stopped
+
+  mongo:
+    image: mongo:7
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    restart: unless-stopped
+
+volumes:
+  mongo_data:
