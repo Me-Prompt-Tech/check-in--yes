@@ -22,35 +22,169 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-kanit), 'Kanit', sans-serif;
 }
 
-/* Light Mode Overrides */
+/* ===== Light Mode Overrides ===== */
 html.light body {
   --background: #f8fafc;
   --foreground: #0f172a;
 }
+
+/* --- Base Slate Backgrounds --- */
 html.light .bg-slate-950 { background-color: #f8fafc !important; }
-html.light .bg-slate-900 { background-color: #f1f5f9 !important; }
-html.light .bg-slate-800 { background-color: #e2e8f0 !important; }
-html.light .bg-slate-700 { background-color: #cbd5e1 !important; }
+html.light .bg-slate-900 { background-color: #ffffff !important; }
+html.light .bg-slate-800 { background-color: #f1f5f9 !important; }
+html.light .bg-slate-700 { background-color: #e2e8f0 !important; }
+
+/* --- Base Slate Borders --- */
 html.light .border-slate-800 { border-color: #e2e8f0 !important; }
 html.light .border-slate-700 { border-color: #cbd5e1 !important; }
+
+/* --- Base Slate Text --- */
+html.light .text-white { color: #0f172a !important; }
 html.light .text-slate-100 { color: #0f172a !important; }
 html.light .text-slate-200 { color: #1e293b !important; }
 html.light .text-slate-300 { color: #334155 !important; }
-html.light .text-slate-400 { color: #475569 !important; }
-html.light .text-slate-500 { color: #64748b !important; }
+html.light .text-slate-400 { color: #64748b !important; }
+html.light .text-slate-500 { color: #94a3b8 !important; }
+html.light .text-slate-600 { color: #94a3b8 !important; }
+
+/* --- Dividers --- */
 html.light .divide-slate-800 { border-color: #e2e8f0 !important; }
 html.light .divide-slate-800\/60 > * { border-color: #e2e8f099 !important; }
 html.light .divide-slate-800\/40 > * { border-color: #e2e8f066 !important; }
-html.light .bg-slate-800\/60 { background-color: #e2e8f099 !important; }
-html.light .bg-slate-800\/50 { background-color: #e2e8f080 !important; }
-html.light .bg-slate-800\/30 { background-color: #e2e8f04d !important; }
+
+/* --- Opacity Variant Backgrounds --- */
+html.light .bg-slate-800\/60 { background-color: #f1f5f999 !important; }
+html.light .bg-slate-800\/50 { background-color: #f1f5f980 !important; }
+html.light .bg-slate-800\/30 { background-color: #f1f5f94d !important; }
+html.light .bg-slate-800\/20 { background-color: #f1f5f933 !important; }
 html.light .bg-slate-950\/50 { background-color: #f8fafc80 !important; }
-html.light .hover\:bg-slate-800:hover { background-color: #e2e8f0 !important; }
-html.light .hover\:bg-slate-700:hover { background-color: #cbd5e1 !important; }
-html.light .hover\:bg-slate-800\/50:hover { background-color: #e2e8f080 !important; }
-html.light .hover\:bg-slate-800\/30:hover { background-color: #e2e8f04d !important; }
-html.light .hover\:bg-slate-850\/35:hover { background-color: #cbd5e159 !important; }
-html.light .bg-slate-850\/35 { background-color: #cbd5e159 !important; }
+html.light .bg-slate-950\/20 { background-color: #f8fafc33 !important; }
+
+/* --- Hover Backgrounds --- */
+html.light .hover\:bg-slate-800:hover { background-color: #f1f5f9 !important; }
+html.light .hover\:bg-slate-700:hover { background-color: #e2e8f0 !important; }
+html.light .hover\:bg-slate-800\/50:hover { background-color: #f1f5f980 !important; }
+html.light .hover\:bg-slate-800\/30:hover { background-color: #f1f5f94d !important; }
+html.light .hover\:bg-slate-850\/35:hover { background-color: #e2e8f059 !important; }
+html.light .bg-slate-850\/35 { background-color: #e2e8f059 !important; }
+
+/* --- Section container: white cards with soft shadow --- */
+html.light .shadow-xl { box-shadow: 0 4px 24px -4px rgba(15, 23, 42, 0.06), 0 2px 8px -2px rgba(15, 23, 42, 0.04) !important; }
+html.light .shadow-lg { box-shadow: 0 2px 16px -3px rgba(15, 23, 42, 0.05), 0 1px 4px -1px rgba(15, 23, 42, 0.03) !important; }
+html.light .shadow-md { box-shadow: 0 2px 8px -2px rgba(15, 23, 42, 0.06) !important; }
+html.light .shadow-sm { box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.04) !important; }
+
+/* --- Radial gradient background overlay (section decoration) --- */
+html.light .bg-radial { background: radial-gradient(ellipse at center, rgba(99, 102, 241, 0.04), transparent) !important; }
+
+/* --- Section header target badge --- */
+html.light .bg-slate-950 { background-color: #f1f5f9 !important; }
+
+/* ===== 4-Period Check-In Card Overrides ===== */
+
+/* -- Checked (emerald) card -- */
+html.light .bg-emerald-950\/10 { background-color: #f0fdf4 !important; }
+html.light .border-emerald-500\/25 { border-color: #86efac !important; }
+html.light .border-emerald-500\/40 { border-color: #4ade80 !important; }
+html.light .hover\:border-emerald-500\/40:hover { border-color: #4ade80 !important; }
+
+/* -- Active (indigo) card -- */
+html.light .bg-indigo-950\/10 { background-color: #eef2ff !important; }
+html.light .border-indigo-500\/30 { border-color: #a5b4fc !important; }
+html.light .border-indigo-500\/50 { border-color: #818cf8 !important; }
+html.light .hover\:border-indigo-500\/50:hover { border-color: #818cf8 !important; }
+html.light .shadow-indigo-500\/5 { box-shadow: 0 4px 14px -3px rgba(99, 102, 241, 0.12) !important; }
+html.light .ring-indigo-500\/20 { --tw-ring-color: rgba(99, 102, 241, 0.15) !important; }
+
+/* -- Late/Early (amber) card -- */
+html.light .bg-amber-950\/10 { background-color: #fffbeb !important; }
+html.light .border-amber-500\/25 { border-color: #fcd34d !important; }
+html.light .border-amber-500\/40 { border-color: #fbbf24 !important; }
+html.light .hover\:border-amber-500\/40:hover { border-color: #fbbf24 !important; }
+
+/* -- Upcoming/disabled card (reduce opacity effect, use subtle gray) -- */
+html.light .opacity-80 { opacity: 1 !important; }
+
+/* ===== Status Badges ===== */
+
+/* Checked status badges */
+html.light .bg-emerald-500\/10 { background-color: #dcfce7 !important; }
+html.light .text-emerald-400 { color: #16a34a !important; }
+html.light .border-emerald-500\/20 { border-color: #86efac !important; }
+
+html.light .bg-amber-500\/10 { background-color: #fef3c7 !important; }
+html.light .text-amber-400 { color: #d97706 !important; }
+html.light .border-amber-500\/20 { border-color: #fcd34d !important; }
+
+html.light .bg-rose-500\/10 { background-color: #fff1f2 !important; }
+html.light .text-rose-400 { color: #e11d48 !important; }
+html.light .border-rose-500\/20 { border-color: #fda4af !important; }
+
+/* Period state badges */
+html.light .bg-indigo-500\/20 { background-color: #e0e7ff !important; }
+html.light .text-indigo-400 { color: #4f46e5 !important; }
+html.light .border-indigo-500\/30 { border-color: #a5b4fc !important; }
+
+html.light .bg-amber-500\/15 { background-color: #fef3c7 !important; }
+html.light .border-amber-500\/25 { border-color: #fcd34d !important; }
+
+html.light .bg-slate-800 { background-color: #f1f5f9 !important; }
+html.light .border-slate-750 { border-color: #e2e8f0 !important; }
+
+/* ===== Buttons ===== */
+
+/* Active period button (indigo) */
+html.light .bg-indigo-600 { background-color: #4f46e5 !important; }
+html.light .border-indigo-500 { border-color: #6366f1 !important; }
+html.light .hover\:bg-indigo-500:hover { background-color: #6366f1 !important; }
+html.light .hover\:shadow-indigo-500\/10:hover { box-shadow: 0 4px 14px -3px rgba(99, 102, 241, 0.25) !important; }
+
+/* Late period button (amber) */
+html.light .bg-amber-600\/20 { background-color: #fef3c7 !important; }
+html.light .hover\:bg-amber-600\/30:hover { background-color: #fde68a !important; }
+html.light .border-amber-500\/30 { border-color: #fbbf24 !important; }
+html.light .hover\:text-amber-300:hover { color: #b45309 !important; }
+
+/* Checked confirmation bar */
+html.light .bg-emerald-500\/10 { background-color: #dcfce7 !important; }
+
+/* Disabled button */
+html.light .pointer-events-none { pointer-events: none; }
+
+/* ===== Sidebar Specific ===== */
+
+/* Active nav link */
+html.light .bg-indigo-600\/10 { background-color: #eef2ff !important; }
+html.light .border-indigo-500 { border-color: #6366f1 !important; }
+
+/* Logout / action buttons */
+html.light .hover\:bg-indigo-950\/20:hover { background-color: #eef2ff !important; }
+html.light .hover\:text-indigo-400:hover { color: #4f46e5 !important; }
+html.light .hover\:bg-rose-950\/20:hover { background-color: #fff1f2 !important; }
+html.light .hover\:text-rose-400:hover { color: #e11d48 !important; }
+
+/* ===== Location Status ===== */
+html.light .bg-emerald-500\/10 { background-color: #dcfce7 !important; }
+html.light .border-emerald-500\/20 { border-color: #86efac !important; }
+html.light .bg-amber-500\/10 { background-color: #fef3c7 !important; }
+html.light .border-amber-500\/20 { border-color: #fcd34d !important; }
+
+/* ===== Font Mono (ensure readability in light mode) ===== */
+html.light .font-mono { letter-spacing: -0.02em; }
+
+/* ===== Table Overrides ===== */
+html.light .bg-indigo-500\/10 { background-color: #e0e7ff !important; }
+html.light .border-indigo-500\/20 { border-color: #c7d2fe !important; }
+
+/* ===== Drop Shadow for clock ===== */
+html.light .drop-shadow-sm { filter: none !important; }
+
+/* ===== Live Clock Text (force dark on light mode) ===== */
+html.light .text-white,
+html.light .font-mono.text-white,
+html.light .font-mono.font-black.text-white {
+  color: #0f172a !important;
+}

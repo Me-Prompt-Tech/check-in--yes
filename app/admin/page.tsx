@@ -133,11 +133,11 @@ export default function AdminDashboard() {
 
   // Filter logic
   const filteredLogs = logs.filter((log) => {
-    const matchesSearch = 
-      log.name.toLowerCase().includes(search.toLowerCase()) || 
+    const matchesSearch =
+      log.name.toLowerCase().includes(search.toLowerCase()) ||
       log.id.toLowerCase().includes(search.toLowerCase()) ||
       log.role.toLowerCase().includes(search.toLowerCase());
-    
+
     const matchesStatus = statusFilter === 'All' || log.status === statusFilter;
     const matchesDept = deptFilter === 'All' || log.department === deptFilter;
 
@@ -164,7 +164,7 @@ export default function AdminDashboard() {
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col md:flex-row">
-      
+
       {/* Sidebar */}
       <aside className="w-full md:w-64 bg-slate-900 border-b md:border-b-0 md:border-r border-slate-800 p-6 flex flex-col justify-between shrink-0">
         <div>
@@ -184,8 +184,8 @@ export default function AdminDashboard() {
 
           {/* Navigation Links */}
           <nav className="space-y-1.5">
-            <a 
-              href="/admin" 
+            <a
+              href="/admin"
               className="flex items-center gap-3 px-4 py-3 bg-indigo-600/10 border-l-2 border-indigo-500 rounded-lg text-sm font-semibold text-indigo-400 transition"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -193,8 +193,8 @@ export default function AdminDashboard() {
               </svg>
               ภาพรวมการเข้างาน
             </a>
-            <a 
-              href="/admin/employees" 
+            <a
+              href="/admin/employees"
               className="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 rounded-lg text-sm font-medium transition"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -202,8 +202,8 @@ export default function AdminDashboard() {
               </svg>
               จัดการข้อมูลพนักงาน
             </a>
-            <a 
-              href="/admin/departments" 
+            <a
+              href="/admin/departments"
               className="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 rounded-lg text-sm font-medium transition"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -211,8 +211,8 @@ export default function AdminDashboard() {
               </svg>
               จัดการแผนก
             </a>
-            <a 
-              href="/admin/leaves" 
+            <a
+              href="/admin/leaves"
               className="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 rounded-lg text-sm font-medium transition"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -220,8 +220,8 @@ export default function AdminDashboard() {
               </svg>
               คำขอลางาน
             </a>
-            <a 
-              href="/admin/reports" 
+            <a
+              href="/admin/reports"
               className="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 rounded-lg text-sm font-medium transition"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -261,7 +261,7 @@ export default function AdminDashboard() {
 
       {/* Main Content Dashboard */}
       <main className="flex-1 p-6 md:p-10 overflow-y-auto max-w-7xl mx-auto w-full">
-        
+
         {/* Top Header */}
         <header className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 mb-8">
           <div>
@@ -286,7 +286,7 @@ export default function AdminDashboard() {
               <span className="text-xs text-slate-400 font-medium">คน</span>
             </div>
           </div>
-          
+
           {/* Card: Present */}
           <div className="bg-slate-900 border border-slate-800/80 rounded-2xl p-5 shadow-sm">
             <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">มาปกติ (ตรงเวลา)</p>
@@ -329,7 +329,7 @@ export default function AdminDashboard() {
           <div className="flex flex-col lg:flex-row justify-between gap-4 items-center mb-6">
             <h3 className="font-bold text-lg self-start">ประวัติเวลาการทำงาน</h3>
             <div className="flex flex-wrap items-center gap-3 w-full lg:w-auto">
-              
+
               {/* Search Bar */}
               <div className="relative flex-1 md:flex-initial min-w-[200px]">
                 <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500">
@@ -443,13 +443,12 @@ export default function AdminDashboard() {
                         </div>
                       </td>
                       <td className="py-4 px-4 text-center">
-                        <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold tracking-wide border ${
-                          log.status === 'Present' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' :
-                          log.status === 'Late' ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' :
-                          log.status === 'Absent' ? 'bg-rose-500/10 text-rose-400 border-rose-500/20' :
-                          log.status === 'Incomplete' ? 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20' :
-                          'bg-sky-500/10 text-sky-400 border-sky-500/20'
-                        }`}>
+                        <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold tracking-wide border ${log.status === 'Present' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' :
+                            log.status === 'Late' ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' :
+                              log.status === 'Absent' ? 'bg-rose-500/10 text-rose-400 border-rose-500/20' :
+                                log.status === 'Incomplete' ? 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20' :
+                                  'bg-sky-500/10 text-sky-400 border-sky-500/20'
+                          }`}>
                           {log.status === 'Present' && 'ตรงเวลา'}
                           {log.status === 'Late' && 'เข้าสาย'}
                           {log.status === 'Absent' && 'ขาดงาน'}

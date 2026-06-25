@@ -300,7 +300,7 @@ export default function EmployeeDashboard() {
         <header className="flex flex-col md:flex-row justify-between items-center gap-6 bg-slate-900 border border-slate-800 rounded-3xl p-6 lg:p-8 shadow-lg">
           <div className="text-center md:text-left">
             <span className="text-xs font-bold text-indigo-400 uppercase tracking-widest">เวลาปัจจุบัน</span>
-            <div className="text-4xl lg:text-5xl font-mono font-black tracking-tight mt-1 text-white tabular-nums drop-shadow-sm">
+            <div className="text-4xl lg:text-5xl font-mono tracking-tight mt-1 text-white tabular-nums drop-shadow-sm">
               {currentTime || '00:00:00'}
             </div>
             <p className="text-slate-400 text-sm font-medium mt-1.5">{currentDate}</p>
@@ -395,7 +395,7 @@ export default function EmployeeDashboard() {
                     {/* Clocked Time */}
                     <div className="my-4">
                       <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">เวลาบันทึก</p>
-                      <p className="text-2xl font-mono font-black text-slate-200 mt-1 tracking-tight">
+                      <p className="text-2xl font-mono text-slate-200 mt-1 tracking-tight">
                         {period.state.time}
                       </p>
                     </div>
