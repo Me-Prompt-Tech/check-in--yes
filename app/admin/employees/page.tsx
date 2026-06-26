@@ -13,13 +13,14 @@ interface Employee {
   id: string;
   firstName: string;
   lastName: string;
-  department: 'Engineering' | 'HR' | 'Marketing' | 'Sales' | 'Design';
+  department: 'Engineering' | 'HR' | 'Marketing' | 'Sales' | 'Design' | string;
   role: string;
   username: string;
-  status: 'active' | 'suspended'; // ใช้งาน / ระงับ
+  status: 'active' | 'suspended';
   createdDate: string;
   forcePasswordChange: boolean;
   roleType?: 'admin' | 'employee';
+  profilePicture?: string | null;
 }
 
 export default function EmployeeManagement() {
@@ -45,7 +46,7 @@ const [search, setSearch] = useState('');
   const [formId, setFormId] = useState('');
   const [formFirstName, setFormFirstName] = useState('');
   const [formLastName, setFormLastName] = useState('');
-  const [formDepartment, setFormDepartment] = useState<'Engineering' | 'HR' | 'Marketing' | 'Sales' | 'Design'>('Engineering');
+  const [formDepartment, setFormDepartment] = useState<string>('Engineering');
   const [formRole, setFormRole] = useState('');
   const [formUsername, setFormUsername] = useState('');
   const [formPassword, setFormPassword] = useState('');
@@ -444,7 +445,18 @@ const [search, setSearch] = useState('');
                   filteredEmployees.map((emp) => (
                     <tr key={emp.id} className="hover:bg-slate-850/30 transition">
                       <td className="py-4 px-4 font-mono text-slate-400 font-semibold">{emp.id}</td>
-                      <td className="py-4 px-4 font-semibold text-slate-200">{emp.firstName} {emp.lastName}</td>
+                      <td className="py-4 px-4 font-semibold text-slate-200">
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-xs font-bold overflow-hidden shrink-0">
+                            {emp.profilePicture ? (
+                              <img src={emp.profilePicture} alt={emp.firstName} className="w-full h-full object-cover" />
+                            ) : (
+                              (emp.firstName?.charAt(0) || emp.username.charAt(0)).toUpperCase()
+                            )}
+                          </div>
+                          <span>{emp.firstName} {emp.lastName}</span>
+                        </div>
+                      </td>
                       <td className="py-4 px-4 text-slate-300">{emp.department}</td>
                       <td className="py-4 px-4 text-slate-400">{emp.role}</td>
                       <td className="py-4 px-4 font-mono text-slate-400">{emp.username}</td>

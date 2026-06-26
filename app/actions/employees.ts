@@ -2,6 +2,7 @@
 
 import prisma from '../lib/db';
 import { seedDatabase } from './seed';
+import { checkCurrentSession } from './auth';
 
 export interface DBEmployee {
   id: string;
@@ -15,6 +16,7 @@ export interface DBEmployee {
   forcePasswordChange: boolean;
   roleType?: 'admin' | 'employee';
   password?: string;
+  profilePicture?: string | null;
 }
 
 export interface DBAttendanceLog {
@@ -110,7 +112,8 @@ export async function fetchEmployeesAction(): Promise<DBEmployee[]> {
     status: item.status,
     createdDate: item.createdDate,
     forcePasswordChange: item.forcePasswordChange,
-    roleType: item.roleType
+    roleType: item.roleType,
+    profilePicture: item.profilePicture
   })) as DBEmployee[];
 }
 
@@ -317,6 +320,24 @@ export async function fetchEmployeeLogsAction(empId: string) {
 }
 
 // 8. Fetch Today's log for specific Employee
+
+// Helper: Check if employee is on leave today
+async function checkIfOnLeaveToday(empId: string, todayDateStr: string) {
+  const leaves = await prisma.leaveRequest.findMany({
+    where: {
+      employeeId: empId,
+      status: 'approved'
+    }
+  });
+
+  for (const leave of leaves) {
+    if (todayDateStr >= leave.startDate && todayDateStr <= leave.endDate) {
+      return true;
+    }
+  }
+  return false;
+}
+
 export async function fetchEmployeeLogTodayAction(empId: string) {
   await ensureDbSeeded();
   const today = getTodayLocalDate();
@@ -325,12 +346,15 @@ export async function fetchEmployeeLogTodayAction(empId: string) {
     where: { id: `${empId}_${today}` }
   });
   
+  const isOnLeave = await checkIfOnLeaveToday(empId, today);
+
   if (!log) {
     return {
       isCheckedIn: false,
       isCheckedOut: false,
       checkInTime: '-',
-      checkOutTime: '-'
+      checkOutTime: '-',
+      isOnLeave
     };
   }
   
@@ -338,7 +362,8 @@ export async function fetchEmployeeLogTodayAction(empId: string) {
     isCheckedIn: log.morningIn !== '-',
     isCheckedOut: log.leaveWork !== '-',
     checkInTime: log.morningIn,
-    checkOutTime: log.leaveWork
+    checkOutTime: log.leaveWork,
+    isOnLeave
   };
 }
 
@@ -346,6 +371,11 @@ export async function fetchEmployeeLogTodayAction(empId: string) {
 export async function punchAttendanceAction(empId: string, type: 'morning' | 'lunch' | 'afternoon' | 'leave', earlyLeaveReason?: string) {
   await ensureDbSeeded();
   const today = getTodayLocalDate();
+  
+  const isOnLeave = await checkIfOnLeaveToday(empId, today);
+  if (isOnLeave) {
+    return { success: false, error: 'คุณได้รับการอนุมัติให้ลางานในวันนี้ ไม่สามารถลงเวลาทำงานได้' };
+  }
   
   const now = new Date();
   const formattedTime = now.toLocaleTimeString('en-GB', { 
@@ -473,3 +503,26 @@ export async function fetchAttendanceReportAction(
   });
 }
 
+
+// 12. Update Employee Profile Picture
+export async function updateProfilePictureAction(empId: string, base64Data: string) {
+  await ensureDbSeeded();
+  const session = await checkCurrentSession();
+  
+  if (!session) return { success: false, error: 'Unauthorized' };
+  
+  // Only the employee themselves or an admin can update the picture
+  if (session.role !== 'admin' && session.userId !== empId) {
+    return { success: false, error: 'Unauthorized' };
+  }
+  
+  try {
+    await prisma.employee.update({
+      where: { id: empId },
+      data: { profilePicture: base64Data }
+    });
+    return { success: true };
+  } catch (err) {
+    return { success: false, error: 'ไม่สามารถอัปเดตรูปโปรไฟล์ได้' };
+  }
+}

@@ -9,6 +9,7 @@ import {
   deleteLeaveRequestAction,
   DBLeaveRequest
 } from '../../actions/leaves';
+import { fetchEmployeesAction } from '../../actions/employees';
 import { ThemeToggle } from '../../components/ThemeToggle';
 
 const LEAVE_TYPES = [
@@ -48,6 +49,7 @@ export default function EmployeeLeavePage() {
   const [isPending, startTransition] = useTransition();
   const [authLoading, setAuthLoading] = useState(true);
   const [userName, setUserName] = useState('');
+  const [profilePicture, setProfilePicture] = useState<string | null>(null);
 
   // Leave requests list
   const [requests, setRequests] = useState<DBLeaveRequest[]>([]);
@@ -79,6 +81,9 @@ export default function EmployeeLeavePage() {
         return;
       }
       setUserName(session.displayName || session.username);
+        const employees = await fetchEmployeesAction();
+        const me = employees.find(e => e.id === session.userId);
+        if (me?.profilePicture) setProfilePicture(me.profilePicture);
       setAuthLoading(false);
       loadRequests();
     }
@@ -209,8 +214,12 @@ export default function EmployeeLeavePage() {
         <div>
           <div className="flex items-center justify-between w-full mb-8">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center font-bold text-white shadow-md text-sm">
-                {userName.charAt(0).toUpperCase()}
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center font-bold text-white shadow-md text-sm overflow-hidden">
+                {profilePicture ? (
+                  <img src={profilePicture} alt={userName} className="w-full h-full object-cover" />
+                ) : (
+                  userName.charAt(0).toUpperCase()
+                )}
               </div>
               <div>
                 <h2 className="font-extrabold tracking-tight text-sm">{userName}</h2>
@@ -227,6 +236,10 @@ export default function EmployeeLeavePage() {
             <a href="#" onClick={(e) => e.preventDefault()} className="flex items-center gap-3 px-4 py-3 bg-indigo-600/10 border-l-2 border-indigo-500 rounded-lg text-sm font-semibold text-indigo-400 transition">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
               ใบลางาน
+            </a>
+            <a href="/employee/profile" className="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 rounded-lg text-sm font-medium transition">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+              ข้อมูลส่วนตัว
             </a>
           </nav>
         </div>

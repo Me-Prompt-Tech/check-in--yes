@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { checkCurrentSession, logoutAction } from '../actions/auth';
-import { fetchEmployeesAction, fetchEmployeeLogsAction, punchAttendanceAction } from '../actions/employees';
+import { fetchEmployeesAction, fetchEmployeeLogsAction, punchAttendanceAction, fetchEmployeeLogTodayAction } from '../actions/employees';
 import { EmployeeSidebar } from '../components/EmployeeSidebar';
 interface AttendanceLog {
   date: string;
@@ -67,6 +67,7 @@ export default function EmployeeDashboard() {
   const [empName, setEmpName] = useState('');
   const [empDept, setEmpDept] = useState('');
   const [empRole, setEmpRole] = useState('');
+  const [profilePicture, setProfilePicture] = useState<string | null>(null);
   
   // Checking actions states
   const [morningIn, setMorningIn] = useState<{ time: string; status: 'Normal' | 'Late' | '-' }>({ time: '-', status: '-' });
@@ -81,6 +82,7 @@ export default function EmployeeDashboard() {
   const [earlyLeaveError, setEarlyLeaveError] = useState('');
   const [nowDate, setNowDate] = useState<Date | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isOnLeave, setIsOnLeave] = useState(false);
 
   // Attendance history
   const [history, setHistory] = useState<AttendanceLog[]>(INITIAL_ATTENDANCE);
@@ -99,10 +101,15 @@ export default function EmployeeDashboard() {
         try {
           const employees = await fetchEmployeesAction();
           const me = employees.find(e => e.id === session.userId);
+          if (me?.profilePicture) setProfilePicture(me.profilePicture);
           if (me) {
             setEmpDept(me.department || '');
             setEmpRole(me.role || '');
           }
+
+
+          const todayLogData = await fetchEmployeeLogTodayAction(session.userId);
+          setIsOnLeave(todayLogData.isOnLeave || false);
 
           const userLogs = await fetchEmployeeLogsAction(session.userId);
           if (userLogs && userLogs.length > 0) {
@@ -229,6 +236,10 @@ export default function EmployeeDashboard() {
 
   const handleRecord = (periodId: 'morning' | 'lunch' | 'afternoon' | 'leave') => {
     if (!isWithinArea || !empId) return;
+    if (isOnLeave) {
+      alert('คุณได้รับการอนุมัติให้ลางานในวันนี้ ไม่สามารถลงเวลาทำงานได้');
+      return;
+    }
 
     if (periodId === 'leave' && nowDate) {
       // Current hour in Asia/Bangkok
@@ -270,13 +281,20 @@ export default function EmployeeDashboard() {
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col lg:flex-row">
       
       {/* Sidebar / Left Column */}
-      <EmployeeSidebar empName={empName} isAdmin={isAdmin} />
+      <EmployeeSidebar empName={empName} isAdmin={isAdmin} profilePicture={profilePicture} />
 
       {/* Main Panel Content */}
       <main className="flex-1 p-6 lg:p-10 max-w-5xl mx-auto w-full flex flex-col gap-8">
         
         {/* Unified Clock & Check-In Section */}
-        <section className="bg-slate-900 border border-slate-800 rounded-3xl p-6 lg:p-8 shadow-xl relative overflow-hidden flex flex-col lg:flex-row gap-8 lg:gap-0">
+        {isOnLeave && (
+          <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-3xl p-6 text-center shadow-lg">
+            <h2 className="text-xl font-bold text-emerald-400 mb-2">คุณได้รับการอนุมัติให้ลางานในวันนี้</h2>
+            <p className="text-slate-300 text-sm">ไม่สามารถลงเวลาทำงานได้ เนื่องจากสถานะการลาได้รับการอนุมัติแล้ว</p>
+          </div>
+        )}
+        
+        <section className={`bg-slate-900 border border-slate-800 rounded-3xl p-6 lg:p-8 shadow-xl relative overflow-hidden flex flex-col lg:flex-row gap-8 lg:gap-0 ${isOnLeave ? 'opacity-50 pointer-events-none grayscale' : ''}`}>
           <div className="absolute inset-0 bg-radial from-indigo-600/5 to-transparent pointer-events-none"></div>
 
           {/* Left part: Live Clock & Location */}

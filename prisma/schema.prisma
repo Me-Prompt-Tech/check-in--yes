@@ -19,6 +19,7 @@ model Employee {
   status              String   @default("active")
   createdDate         String
   forcePasswordChange Boolean  @default(false)
+  profilePicture      String?
 
   @@map("employees")
 }
