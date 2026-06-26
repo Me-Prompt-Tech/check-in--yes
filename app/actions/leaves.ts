@@ -123,7 +123,7 @@ export async function fetchAllLeaveRequestsAction(): Promise<DBLeaveRequest[]> {
 // 4. Approve or Reject a leave request (Admin only)
 export async function updateLeaveStatusAction(
   id: string,
-  status: 'approved' | 'rejected',
+  status: 'approved' | 'rejected' | 'pending',
   adminNote?: string
 ) {
   const session = await checkCurrentSession();

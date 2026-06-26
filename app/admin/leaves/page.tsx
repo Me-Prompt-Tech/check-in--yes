@@ -49,7 +49,7 @@ export default function AdminLeavesPage() {
 
   // Review Modal
   const [reviewTarget, setReviewTarget] = useState<DBLeaveRequest | null>(null);
-  const [reviewAction, setReviewAction] = useState<'approved' | 'rejected'>('approved');
+  const [reviewAction, setReviewAction] = useState<'approved' | 'rejected' | 'pending'>('approved');
   const [adminNote, setAdminNote] = useState('');
   const [reviewError, setReviewError] = useState('');
 
@@ -89,7 +89,7 @@ export default function AdminLeavesPage() {
     });
   };
 
-  const openReview = (req: DBLeaveRequest, action: 'approved' | 'rejected') => {
+  const openReview = (req: DBLeaveRequest, action: 'approved' | 'rejected' | 'pending') => {
     setReviewTarget(req);
     setReviewAction(action);
     setAdminNote('');
@@ -272,8 +272,15 @@ export default function AdminLeavesPage() {
                                 ปฏิเสธ
                               </button>
                             </div>
+                          ) : req.status === 'approved' ? (
+                            <button
+                              onClick={() => openReview(req, 'pending')}
+                              className="px-3 py-1.5 bg-slate-600/20 hover:bg-slate-600 border border-slate-500/30 hover:border-slate-500 text-slate-300 hover:text-white text-xs font-semibold rounded-lg transition cursor-pointer flex items-center gap-1"
+                            >
+                              ยกเลิกอนุมัติ
+                            </button>
                           ) : (
-                            <span className="text-xs text-slate-600">ดำเนินการแล้ว</span>
+                            <span className="text-xs text-slate-600">ปฏิเสธแล้ว</span>
                           )}
                         </td>
                       </tr>
@@ -291,9 +298,9 @@ export default function AdminLeavesPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setReviewTarget(null)}></div>
           <div className="relative bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl w-full max-w-md overflow-hidden">
-            <div className={`px-6 py-4 border-b border-slate-800 flex justify-between items-center ${reviewAction === 'approved' ? 'bg-emerald-500/5' : 'bg-rose-500/5'}`}>
+            <div className={`px-6 py-4 border-b border-slate-800 flex justify-between items-center ${reviewAction === 'approved' ? 'bg-emerald-500/5' : reviewAction === 'pending' ? 'bg-slate-500/5' : 'bg-rose-500/5'}`}>
               <h3 className="font-bold text-lg">
-                {reviewAction === 'approved' ? '✅ ยืนยันการอนุมัติ' : '❌ ยืนยันการปฏิเสธ'}
+                {reviewAction === 'approved' ? '✅ ยืนยันการอนุมัติ' : reviewAction === 'pending' ? '🔄 ยกเลิกการอนุมัติ' : '❌ ยืนยันการปฏิเสธ'}
               </h3>
               <button onClick={() => setReviewTarget(null)} className="text-slate-500 hover:text-slate-300 cursor-pointer">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
