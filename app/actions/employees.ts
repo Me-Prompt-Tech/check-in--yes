@@ -439,6 +439,19 @@ export async function punchAttendanceAction(empId: string, type: 'morning' | 'lu
   return { success: true, formattedTime };
 }
 
+// Fetch Unique Departments from Employees for filtering
+export async function getUniqueEmployeeDepartmentsAction() {
+  const list = await prisma.employee.findMany({
+    select: { department: true },
+    distinct: ['department']
+  });
+  
+  return list
+    .map(e => e.department)
+    .filter((d): d is string => Boolean(d))
+    .sort();
+}
+
 // 10. Fetch Attendance Report with Filters
 export async function fetchAttendanceReportAction(
   startDate?: string,

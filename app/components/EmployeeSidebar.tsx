@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useTransition } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { logoutAction } from '../actions/auth';
 import { ThemeToggle } from './ThemeToggle';
 
@@ -13,6 +13,7 @@ interface EmployeeSidebarProps {
 
 export function EmployeeSidebar({ empName, isAdmin, profilePicture }: EmployeeSidebarProps) {
   const router = useRouter();
+  const pathname = usePathname();
   const [isPending, startTransition] = useTransition();
 
   const handleLogout = () => {
@@ -20,6 +21,13 @@ export function EmployeeSidebar({ empName, isAdmin, profilePicture }: EmployeeSi
       await logoutAction();
       router.push('/');
     });
+  };
+
+  const getLinkClass = (path: string) => {
+    const isActive = pathname === path;
+    const activeClasses = "bg-indigo-600/10 border-l-2 border-indigo-500 text-indigo-400";
+    const inactiveClasses = "text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 border-l-2 border-transparent font-medium";
+    return `flex items-center gap-3 px-4 py-3 rounded-lg text-sm transition ${isActive ? activeClasses : inactiveClasses}`;
   };
 
   return (
@@ -47,7 +55,7 @@ export function EmployeeSidebar({ empName, isAdmin, profilePicture }: EmployeeSi
         <nav className="space-y-1.5">
           <a
             href="/employee"
-            className="flex items-center gap-3 px-4 py-3 bg-indigo-600/10 border-l-2 border-indigo-500 rounded-lg text-sm font-semibold text-indigo-400 transition"
+            className={getLinkClass('/employee')}
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -56,7 +64,7 @@ export function EmployeeSidebar({ empName, isAdmin, profilePicture }: EmployeeSi
           </a>
           <a
             href="/employee/leaves"
-            className="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 rounded-lg text-sm font-medium transition"
+            className={getLinkClass('/employee/leaves')}
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -65,7 +73,7 @@ export function EmployeeSidebar({ empName, isAdmin, profilePicture }: EmployeeSi
           </a>
           <a
             href="/employee/profile"
-            className="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 rounded-lg text-sm font-medium transition"
+            className={getLinkClass('/employee/profile')}
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
