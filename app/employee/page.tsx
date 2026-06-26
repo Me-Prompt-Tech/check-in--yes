@@ -330,8 +330,8 @@ export default function EmployeeDashboard() {
               const pState = nowDate ? getPeriodState(period.id as any, nowDate) : { label: 'กำลังตรวจสอบ...', status: 'upcoming', active: false };
               const isChecked = period.state.time !== '-';
 
-              // ซ่อนการ์ดที่เลยกำหนด หรือ ยังไม่ถึงกำหนด
-              if (pState.status === 'upcoming' || pState.status === 'late') return null;
+              // ซ่อนการ์ดที่ยังไม่ถึงกำหนด
+              if (pState.status === 'upcoming') return null;
 
               return (
                 <div 
@@ -409,7 +409,7 @@ export default function EmployeeDashboard() {
                             : 'bg-amber-600/20 hover:bg-amber-600/30 border-amber-500/30 text-amber-400 hover:text-amber-300'
                       }`}
                     >
-                      {pState.status === 'late' ? 'บันทึกสาย' : pState.status === 'early' ? 'ลงเวลากลับก่อน' : 'บันทึกเวลา'}
+                      {pState.status === 'late' ? 'บันทึกเวลา (สาย)' : pState.status === 'early' ? 'ลงเวลากลับก่อน' : 'บันทึกเวลา'}
                     </button>
                   ) : (
                     <div className="w-full py-2 px-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold flex items-center justify-center gap-1.5 select-none">

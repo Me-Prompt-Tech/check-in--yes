@@ -63,31 +63,30 @@ export default function LoginPage() {
       <div className="min-h-screen bg-slate-900 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500 mx-auto"></div>
-          <p className="text-slate-400 mt-4 font-medium animate-pulse">กำลังตรวจสอบสิทธิ์...</p>
+          <p className="text-slate-400 mt-4 font-medium animate-pulse">กำลังตรวจสอบ...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-radial from-slate-900 via-slate-950 to-black flex items-center justify-center px-4 relative overflow-hidden">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center px-4 relative overflow-hidden transition-colors duration-300">
       
       {/* Decorative background glows */}
-      <div className="absolute top-[-20%] left-[-10%] w-[500px] h-[500px] rounded-full bg-indigo-900/10 blur-[120px] pointer-events-none"></div>
-      <div className="absolute bottom-[-20%] right-[-10%] w-[500px] h-[500px] rounded-full bg-violet-900/10 blur-[120px] pointer-events-none"></div>
+      <div className="absolute top-[-20%] left-[-10%] w-[500px] h-[500px] rounded-full bg-indigo-500/10 dark:bg-indigo-900/10 blur-[120px] pointer-events-none"></div>
+      <div className="absolute bottom-[-20%] right-[-10%] w-[500px] h-[500px] rounded-full bg-violet-500/10 dark:bg-violet-900/10 blur-[120px] pointer-events-none"></div>
 
-      <div className="w-full max-w-md bg-slate-900/50 backdrop-blur-xl rounded-3xl border border-slate-800/80 shadow-2xl p-8 relative z-10">
+      <div className="w-full max-w-md bg-white/80 dark:bg-slate-900/50 backdrop-blur-xl rounded-3xl border border-slate-200 dark:border-slate-800/80 shadow-2xl p-8 relative z-10 transition-colors duration-300">
         
         {/* Logo */}
         <div className="flex justify-center mb-6">
           <div className="relative group">
-            <div className="absolute -inset-0.5 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full blur opacity-30 group-hover:opacity-60 transition duration-1000"></div>
+            <div className="absolute -inset-0.5 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full blur opacity-20 dark:opacity-30 group-hover:opacity-40 dark:group-hover:opacity-60 transition duration-1000"></div>
             <img
               src="/img/logo.jpg"
               alt="Company Logo"
-              className="relative h-24 w-24 rounded-full object-cover border border-slate-700 shadow-md"
+              className="relative h-24 w-24 rounded-full object-cover border border-slate-200 dark:border-slate-700 shadow-md bg-white"
               onError={(e) => {
-                // Fallback icon if image doesn't load
                 (e.target as HTMLElement).style.display = 'none';
               }}
             />
@@ -96,17 +95,17 @@ export default function LoginPage() {
 
         {/* Title */}
         <div className="text-center mb-6">
-          <h1 className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
+          <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-transparent dark:bg-gradient-to-r dark:from-white dark:via-slate-200 dark:to-slate-400 dark:bg-clip-text">
             Welcome Back
           </h1>
-          <p className="text-slate-400 mt-2 text-sm">
+          <p className="text-slate-500 dark:text-slate-400 mt-2 text-sm">
             ลงชื่อเข้าใช้งานระบบลงเวลาทำงาน (Attendance System)
           </p>
         </div>
 
         {/* Error Alert */}
         {error && (
-          <div className="mb-4 p-3.5 bg-rose-500/10 border border-rose-500/20 rounded-xl text-rose-400 text-sm text-center font-medium animate-shake">
+          <div className="mb-4 p-3.5 bg-rose-50 border border-rose-200 dark:bg-rose-500/10 dark:border-rose-500/20 rounded-xl text-rose-600 dark:text-rose-400 text-sm text-center font-medium animate-shake">
             {error}
           </div>
         )}
@@ -114,7 +113,7 @@ export default function LoginPage() {
         <form onSubmit={handleLogin} className="space-y-5">
           {/* Username */}
           <div>
-            <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
+            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-400 uppercase tracking-wider mb-2">
               ชื่อผู้ใช้งาน (Username)
             </label>
             <input
@@ -122,7 +121,7 @@ export default function LoginPage() {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               placeholder="กรอกชื่อผู้ใช้ เช่น admin หรือ employee"
-              className="w-full px-4 py-3 rounded-xl bg-slate-950/60 border border-slate-800 text-slate-200 placeholder-slate-600 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition duration-200"
+              className="w-full px-4 py-3 rounded-xl bg-white dark:bg-slate-950/60 border border-slate-300 dark:border-slate-800 text-slate-900 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-600 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition duration-200"
               disabled={isPending}
               required
             />
@@ -131,13 +130,13 @@ export default function LoginPage() {
           {/* Password */}
           <div>
             <div className="flex items-center justify-between mb-2">
-              <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider">
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-400 uppercase tracking-wider">
                 รหัสผ่าน (Password)
               </label>
               <a
                 href="#"
                 onClick={(e) => e.preventDefault()}
-                className="text-xs text-slate-500 hover:text-indigo-400 transition"
+                className="text-xs text-indigo-600 dark:text-slate-500 hover:text-indigo-700 dark:hover:text-indigo-400 transition"
               >
                 ลืมรหัสผ่าน?
               </a>
@@ -148,14 +147,14 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="กรอกรหัสผ่าน"
-                className="w-full pl-4 pr-12 py-3 rounded-xl bg-slate-950/60 border border-slate-800 text-slate-200 placeholder-slate-600 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition duration-200"
+                className="w-full pl-4 pr-12 py-3 rounded-xl bg-white dark:bg-slate-950/60 border border-slate-300 dark:border-slate-800 text-slate-900 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-600 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition duration-200"
                 disabled={isPending}
                 required
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 focus:outline-none p-1"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300 focus:outline-none p-1"
                 tabIndex={-1}
               >
                 {showPassword ? (
@@ -174,10 +173,10 @@ export default function LoginPage() {
 
           {/* Remember Me */}
           <div className="flex items-center justify-between pt-1">
-            <label className="flex items-center gap-2.5 text-sm text-slate-400 cursor-pointer select-none">
+            <label className="flex items-center gap-2.5 text-sm text-slate-700 dark:text-slate-400 cursor-pointer select-none">
               <input 
                 type="checkbox" 
-                className="rounded bg-slate-950 border-slate-800 text-indigo-600 focus:ring-indigo-500"
+                className="rounded bg-white dark:bg-slate-950 border-slate-300 dark:border-slate-800 text-indigo-600 focus:ring-indigo-500"
               />
               จดจำการเข้าสู่ระบบ
             </label>
@@ -187,7 +186,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={isPending}
-            className="w-full bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-semibold py-3 rounded-xl transition duration-300 shadow-lg shadow-indigo-600/20 active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:pointer-events-none"
+            className="w-full bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 text-white font-semibold py-3 rounded-xl transition duration-300 shadow-lg shadow-indigo-600/20 active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:pointer-events-none"
           >
             {isPending ? (
               <>
@@ -203,15 +202,12 @@ export default function LoginPage() {
           </button>
         </form>
 
-
-
         {/* Footer */}
-        <div className="mt-6 text-center text-xs text-slate-600">
+        <div className="mt-6 text-center text-xs text-slate-500 dark:text-slate-600">
           © 2026 Company Name. All rights reserved.
         </div>
 
       </div>
-
     </div>
   );
 }

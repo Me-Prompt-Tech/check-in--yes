@@ -175,7 +175,7 @@ export default function EmployeeManagement() {
     setFormConfirmPassword('');
     setFormStatus('active');
     setFormRoleType('employee');
-    setFormForceReset(true);
+    setFormForceReset(false);
     setActiveModal('add');
   };
 
@@ -688,7 +688,7 @@ export default function EmployeeManagement() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-400 mb-1.5">รหัสผ่านเริ่มต้น</label>
+                  <label className="block text-xs font-semibold text-slate-400 mb-1.5">กำหนดรหัสผ่าน</label>
                   <input
                     type="password"
                     required
@@ -758,17 +758,7 @@ export default function EmployeeManagement() {
                 </div>
               </div>
 
-              <div>
-                <label className="flex items-center gap-2.5 text-xs text-slate-350 cursor-pointer select-none">
-                  <input
-                    type="checkbox"
-                    checked={formForceReset}
-                    onChange={(e) => setFormForceReset(e.target.checked)}
-                    className="rounded bg-slate-950 border-slate-800 text-indigo-600 focus:ring-indigo-500"
-                  />
-                  บังคับเปลี่ยนรหัสผ่านเมื่อเข้าสู่ระบบครั้งแรก
-                </label>
-              </div>
+
 
               <div className="flex justify-end gap-3 pt-4 border-t border-slate-800 mt-6">
                 <button
