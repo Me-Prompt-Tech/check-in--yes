@@ -284,7 +284,7 @@ export default function ReportsPage() {
           
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm whitespace-nowrap">
-              <thead className="bg-slate-950/50 text-slate-400 border-b border-slate-800">
+              <thead className="bg-slate-950/50 text-slate-400 border-b border-slate-700">
                 <tr>
                   <th className="px-6 py-4 font-semibold">วันที่</th>
                   <th className="px-6 py-4 font-semibold">พนักงาน</th>
@@ -296,10 +296,10 @@ export default function ReportsPage() {
                   <th className="px-6 py-4 font-semibold">หมายเหตุ</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800/50 text-slate-300">
+              <tbody className="text-slate-300">
                 {filteredLogs.length > 0 ? (
                   filteredLogs.map((log) => (
-                    <tr key={log.id} className="hover:bg-slate-800/20 transition">
+                    <tr key={log.id} className="hover:bg-slate-800/20 transition border-b border-slate-700">
                       <td className="px-6 py-4">{log.date}</td>
                       <td className="px-6 py-4">
                         <div className="font-medium text-slate-200">{log.name}</div>

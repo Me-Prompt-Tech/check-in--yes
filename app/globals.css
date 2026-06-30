@@ -39,7 +39,9 @@ html.light .bg-slate-700 { background-color: #e2e8f0 !important; }
 
 /* --- Base Slate Borders --- */
 html.light .border-slate-800 { border-color: #e2e8f0 !important; }
+html.light .border-slate-800\/50 { border-color: #e2e8f0 !important; }
 html.light .border-slate-700 { border-color: #cbd5e1 !important; }
+html.light .border-slate-700\/50 { border-color: #cbd5e1 !important; }
 
 /* --- Base Slate Text --- */
 html.light .text-white { color: #0f172a !important; }
@@ -51,13 +53,17 @@ html.light .text-slate-500 { color: #94a3b8 !important; }
 html.light .text-slate-600 { color: #94a3b8 !important; }
 
 /* --- Dividers --- */
-html.light .divide-slate-800 { border-color: #e2e8f0 !important; }
-html.light .divide-slate-800\/60 > * { border-color: #e2e8f099 !important; }
-html.light .divide-slate-800\/40 > * { border-color: #e2e8f066 !important; }
+html.light .divide-slate-800 > :not([hidden]) ~ :not([hidden]),
+html.light .divide-slate-800\/60 > :not([hidden]) ~ :not([hidden]),
+html.light .divide-slate-800\/50 > :not([hidden]) ~ :not([hidden]),
+html.light .divide-slate-800\/40 > :not([hidden]) ~ :not([hidden]) {
+  border-color: #cbd5e1 !important; 
+}
 
 /* --- Opacity Variant Backgrounds --- */
 html.light .bg-slate-800\/60 { background-color: #f1f5f999 !important; }
 html.light .bg-slate-800\/50 { background-color: #f1f5f980 !important; }
+html.light .bg-slate-800\/40 { background-color: #f1f5f9 !important; }
 html.light .bg-slate-800\/30 { background-color: #f1f5f94d !important; }
 html.light .bg-slate-800\/20 { background-color: #f1f5f933 !important; }
 html.light .bg-slate-950\/50 { background-color: #f8fafc80 !important; }
@@ -122,6 +128,10 @@ html.light .border-amber-500\/20 { border-color: #fcd34d !important; }
 html.light .bg-rose-500\/10 { background-color: #fff1f2 !important; }
 html.light .text-rose-400 { color: #e11d48 !important; }
 html.light .border-rose-500\/20 { border-color: #fda4af !important; }
+
+html.light .bg-sky-500\/10 { background-color: #e0f2fe !important; }
+html.light .text-sky-400 { color: #0284c7 !important; }
+html.light .border-sky-500\/20 { border-color: #7dd3fc !important; }
 
 /* Period state badges */
 html.light .bg-indigo-500\/20 { background-color: #e0e7ff !important; }
@@ -188,3 +198,32 @@ html.light .font-mono.text-white,
 html.light .font-mono.font-black.text-white {
   color: #0f172a !important;
 }
+
+/* ===== Search Box / Input Overrides ===== */
+html.light .bg-slate-950\/60 { background-color: #f1f5f9 !important; }
+html.light .bg-slate-950\/50 { background-color: #f1f5f9 !important; }
+html.light .bg-slate-500\/70 { background-color: #f1f5f9 !important; }
+html.light input::placeholder { color: #94a3b8 !important; }
+
+/* ===== Button Text Color Fixes ===== */
+html.light .bg-indigo-600.text-white,
+html.light .bg-indigo-600 .text-white,
+html.light .bg-rose-600.text-white,
+html.light .bg-rose-600 .text-white,
+html.light .bg-emerald-600.text-white,
+html.light .bg-emerald-600 .text-white {
+  color: #ffffff !important;
+}
+
+/* ===== Action Buttons Overrides (Employee Table) ===== */
+html.light .bg-indigo-950\/40 { background-color: #ffffff !important; }
+html.light .hover\:bg-indigo-900\/40:hover { background-color: #eef2ff !important; }
+html.light .border-indigo-950 { border-color: #e2e8f0 !important; }
+
+html.light .bg-amber-950\/40 { background-color: #ffffff !important; }
+html.light .hover\:bg-amber-900\/40:hover { background-color: #fffbeb !important; }
+html.light .border-amber-950 { border-color: #e2e8f0 !important; }
+
+html.light .bg-rose-950\/40 { background-color: #ffffff !important; }
+html.light .hover\:bg-rose-900\/40:hover { background-color: #fff1f2 !important; }
+html.light .border-rose-950 { border-color: #e2e8f0 !important; }

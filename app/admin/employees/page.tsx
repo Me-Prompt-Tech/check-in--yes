@@ -27,11 +27,11 @@ export default function EmployeeManagement() {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [authLoading, setAuthLoading] = useState(true);
-  
+
   // Data States
   const [employees, setEmployees] = useState<Employee[]>([]);
-    const [adminUserId, setAdminUserId] = useState('');
-const [search, setSearch] = useState('');
+  const [adminUserId, setAdminUserId] = useState('');
+  const [search, setSearch] = useState('');
   const [deptFilter, setDeptFilter] = useState('All');
   const [statusFilter, setStatusFilter] = useState('All');
   const [deptOptions, setDeptOptions] = useState<DBDepartment[]>([]);
@@ -134,12 +134,12 @@ const [search, setSearch] = useState('');
       }
       setAdminUserId(session.userId);
       setAuthLoading(false);
-      
+
       // Load departments first, then employees
       try {
         const depts = await fetchDepartmentsAction();
         setDeptOptions(depts);
-        
+
         const prefs = await fetchPrefixesAction();
         setPrefixes(prefs);
       } catch (err) {
@@ -161,8 +161,8 @@ const [search, setSearch] = useState('');
   // Filters logic
   const filteredEmployees = employees.filter(emp => {
     const nameStr = `${emp.firstName} ${emp.lastName}`.toLowerCase();
-    const searchMatch = 
-      nameStr.includes(search.toLowerCase()) || 
+    const searchMatch =
+      nameStr.includes(search.toLowerCase()) ||
       emp.id.toLowerCase().includes(search.toLowerCase()) ||
       emp.username.toLowerCase().includes(search.toLowerCase());
 
@@ -349,13 +349,13 @@ const [search, setSearch] = useState('');
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col md:flex-row relative">
-      
+
       {/* Sidebar */}
       <AdminSidebar activePath="/admin/employees" userId={adminUserId} isPending={isPending} />
 
       {/* Main Content Area */}
       <main className="flex-1 p-6 md:p-10 overflow-y-auto max-w-7xl mx-auto w-full">
-        
+
         {/* Header Section */}
         <header className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 mb-8">
           <div>
@@ -391,34 +391,46 @@ const [search, setSearch] = useState('');
               placeholder="ค้นหาด้วยชื่อ หรือรหัสพนักงาน..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-500/70 border border-slate-800 text-sm focus:outline-none focus:border-indigo-500 text-slate-200 placeholder-slate-650"
+              className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm focus:outline-none focus:border-indigo-500 text-slate-200 placeholder-slate-500"
             />
           </div>
 
           {/* Department Filter */}
-          <div className="w-full md:w-48">
+          <div className="relative w-full md:w-44 bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 flex items-center justify-center gap-2 focus-within:border-indigo-500 transition-colors">
+            <span className="text-sm text-slate-300 font-medium">
+              {deptFilter === 'All' ? 'ทุกแผนก (All)' : deptFilter}
+            </span>
+            <svg className="w-4 h-4 text-slate-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
             <select
               value={deptFilter}
               onChange={(e) => setDeptFilter(e.target.value)}
-              className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-slate-300 focus:outline-none focus:border-indigo-500 cursor-pointer"
+              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
             >
-              <option value="All">ทุกแผนก (All)</option>
+              <option className="text-center" value="All">ทุกแผนก (All)</option>
               {deptOptions.map(dept => (
-                <option key={dept.id} value={dept.name}>{dept.name}</option>
+                <option className="text-center" key={dept.id} value={dept.name}>{dept.name}</option>
               ))}
             </select>
           </div>
 
           {/* Status Filter */}
-          <div className="w-full md:w-48">
+          <div className="relative w-full md:w-44 bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 flex items-center justify-center gap-2 focus-within:border-indigo-500 transition-colors">
+            <span className="text-sm text-slate-300 font-medium">
+              {{
+                'All': 'ทุกสถานะ (All)',
+                'active': 'ใช้งาน (Active)',
+                'suspended': 'ระงับ (Suspended)'
+              }[statusFilter] || statusFilter}
+            </span>
+            <svg className="w-4 h-4 text-slate-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-slate-300 focus:outline-none focus:border-indigo-500 cursor-pointer"
+              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
             >
-              <option value="All">ทุกสถานะ (All)</option>
-              <option value="active">ใช้งาน (Active)</option>
-              <option value="suspended">ระงับ (Suspended)</option>
+              <option className="text-center" value="All">ทุกสถานะ (All)</option>
+              <option className="text-center" value="active">ใช้งาน (Active)</option>
+              <option className="text-center" value="suspended">ระงับ (Suspended)</option>
             </select>
           </div>
         </section>
@@ -427,8 +439,8 @@ const [search, setSearch] = useState('');
         <section className="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-xl">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="border-b border-slate-800 text-xs font-semibold text-slate-500 uppercase tracking-wider">
+              <thead className="bg-slate-950/50 text-slate-400 border-b border-slate-700">
+                <tr className="border-b border-slate-700 text-xs font-semibold text-slate-500 uppercase tracking-wider">
                   <th className="py-4 px-4">รหัสพนักงาน</th>
                   <th className="py-4 px-4">ชื่อ-นามสกุล</th>
                   <th className="py-4 px-4">แผนก</th>
@@ -440,10 +452,10 @@ const [search, setSearch] = useState('');
                   <th className="py-4 px-4 text-center">จัดการ</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800/60 text-sm">
+              <tbody className="text-sm">
                 {filteredEmployees.length > 0 ? (
                   filteredEmployees.map((emp) => (
-                    <tr key={emp.id} className="hover:bg-slate-850/30 transition">
+                    <tr key={emp.id} className="hover:bg-slate-850/30 transition border-b border-slate-700">
                       <td className="py-4 px-4 font-mono text-slate-400 font-semibold">{emp.id}</td>
                       <td className="py-4 px-4 font-semibold text-slate-200">
                         <div className="flex items-center gap-3">
@@ -461,20 +473,18 @@ const [search, setSearch] = useState('');
                       <td className="py-4 px-4 text-slate-400">{emp.role}</td>
                       <td className="py-4 px-4 font-mono text-slate-400">{emp.username}</td>
                       <td className="py-4 px-4">
-                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider border ${
-                          emp.roleType === 'admin' 
-                            ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' 
+                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider border ${emp.roleType === 'admin'
+                            ? 'bg-amber-500/10 text-amber-400 border-amber-500/20'
                             : 'bg-slate-500/10 text-slate-400 border-slate-500/20'
-                        }`}>
+                          }`}>
                           {emp.roleType === 'admin' ? 'แอดมิน' : 'พนักงาน'}
                         </span>
                       </td>
                       <td className="py-4 px-4">
-                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold border ${
-                          emp.status === 'active' 
-                            ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' 
+                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold border ${emp.status === 'active'
+                            ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
                             : 'bg-rose-500/10 text-rose-400 border-rose-500/20'
-                        }`}>
+                          }`}>
                           {emp.status === 'active' ? 'ใช้งาน' : 'ระงับ'}
                         </span>
                       </td>
@@ -548,7 +558,7 @@ const [search, setSearch] = useState('');
           <div className="w-full max-w-lg bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl animate-scale-in relative">
             <h3 className="text-xl font-bold text-slate-100 mb-2">เพิ่มบัญชีพนักงานใหม่</h3>
             <p className="text-xs text-slate-400 mb-5">กรอกข้อมูลเพื่อสร้างบัญชีพนักงานเข้าสู่ระบบ</p>
-            
+
             {validationError && (
               <div className="mb-4 p-3 bg-rose-500/10 border border-rose-500/20 rounded-xl text-rose-400 text-xs font-medium text-center">
                 {validationError}
@@ -938,7 +948,7 @@ const [search, setSearch] = useState('');
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
           <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl animate-scale-in">
             <h3 className="text-xl font-bold text-slate-100 mb-4 border-b border-slate-800 pb-3">รายละเอียดข้อมูลพนักงาน</h3>
-            
+
             <div className="space-y-4 text-sm">
               <div className="flex items-center justify-between py-1 border-b border-slate-850/40">
                 <span className="text-slate-400 text-xs">รหัสพนักงาน</span>
@@ -962,21 +972,19 @@ const [search, setSearch] = useState('');
               </div>
               <div className="flex items-center justify-between py-1 border-b border-slate-850/40">
                 <span className="text-slate-400 text-xs">สิทธิ์ระบบ</span>
-                <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-xs font-semibold ${
-                  selectedEmployee.roleType === 'admin' 
-                    ? 'bg-amber-500/15 text-amber-400' 
+                <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-xs font-semibold ${selectedEmployee.roleType === 'admin'
+                    ? 'bg-amber-500/15 text-amber-400'
                     : 'bg-slate-500/15 text-slate-400'
-                }`}>
+                  }`}>
                   {selectedEmployee.roleType === 'admin' ? 'แอดมิน (Admin)' : 'พนักงาน (Employee)'}
                 </span>
               </div>
               <div className="flex items-center justify-between py-1 border-b border-slate-850/40">
                 <span className="text-slate-400 text-xs">สถานะ</span>
-                <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold ${
-                  selectedEmployee.status === 'active' 
-                    ? 'bg-emerald-500/15 text-emerald-400' 
+                <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold ${selectedEmployee.status === 'active'
+                    ? 'bg-emerald-500/15 text-emerald-400'
                     : 'bg-rose-500/15 text-rose-400'
-                }`}>
+                  }`}>
                   {selectedEmployee.status === 'active' ? 'ใช้งาน' : 'ระงับการใช้งาน'}
                 </span>
               </div>
@@ -1083,7 +1091,7 @@ const [search, setSearch] = useState('');
       {activeModal === 'delete' && selectedEmployee && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
           <div className="w-full max-w-sm bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl animate-scale-in text-center">
-            
+
             {/* Warning Icon */}
             <div className="w-14 h-14 bg-rose-500/10 text-rose-500 rounded-full flex items-center justify-center mx-auto mb-4 border border-rose-500/20">
               <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">

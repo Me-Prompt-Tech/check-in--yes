@@ -110,7 +110,7 @@ export default function ChangePasswordPage() {
               {role === 'admin' ? 'A' : 'E'}
             </div>
             <div>
-              <h2 className="font-extrabold tracking-tight text-md">AttendHub</h2>
+              <h2 className="font-extrabold tracking-tight text-md">chek-in</h2>
               <span className="text-xs text-slate-500 font-semibold uppercase tracking-wider">
                 {role === 'admin' ? 'แผงควบคุมแอดมิน' : 'พอร์ทัลพนักงาน'}
               </span>

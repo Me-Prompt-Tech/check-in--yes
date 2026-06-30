@@ -10,7 +10,7 @@ const kanit = Kanit({
 });
 
 export const metadata: Metadata = {
-  title: "AttendHub",
+  title: "chek-in",
   description: "Attendance Management System",
 };
 

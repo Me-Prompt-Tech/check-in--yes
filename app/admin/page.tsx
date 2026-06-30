@@ -206,7 +206,7 @@ export default function AdminDashboard() {
         {/* Stats Grid */}
         <section className="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
           {/* Card: Total */}
-          <div className="bg-slate-900 border border-slate-800/80 rounded-2xl p-5 shadow-sm">
+          <div className="bg-slate-800/40 border border-slate-700/50 rounded-2xl p-5 shadow-sm">
             <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">พนักงานทั้งหมด</p>
             <div className="flex items-baseline gap-2 mt-3">
               <span className="text-2xl font-bold text-slate-100">{total}</span>
@@ -215,7 +215,7 @@ export default function AdminDashboard() {
           </div>
 
           {/* Card: Present */}
-          <div className="bg-slate-900 border border-slate-800/80 rounded-2xl p-5 shadow-sm">
+          <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-2xl p-5 shadow-sm">
             <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">มาปกติ (ตรงเวลา)</p>
             <div className="flex items-baseline gap-2 mt-3">
               <span className="text-2xl font-bold text-emerald-400">{present}</span>
@@ -224,7 +224,7 @@ export default function AdminDashboard() {
           </div>
 
           {/* Card: Late */}
-          <div className="bg-slate-900 border border-slate-800/80 rounded-2xl p-5 shadow-sm">
+          <div className="bg-amber-500/10 border border-amber-500/20 rounded-2xl p-5 shadow-sm">
             <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">มาสาย</p>
             <div className="flex items-baseline gap-2 mt-3">
               <span className="text-2xl font-bold text-amber-500">{late}</span>
@@ -233,7 +233,7 @@ export default function AdminDashboard() {
           </div>
 
           {/* Card: Absent */}
-          <div className="bg-slate-900 border border-slate-800/80 rounded-2xl p-5 shadow-sm">
+          <div className="bg-rose-500/10 border border-rose-500/20 rounded-2xl p-5 shadow-sm">
             <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">ขาดงาน</p>
             <div className="flex items-baseline gap-2 mt-3">
               <span className="text-2xl font-bold text-rose-500">{absent}</span>
@@ -242,7 +242,7 @@ export default function AdminDashboard() {
           </div>
 
           {/* Card: On Leave */}
-          <div className="bg-slate-900 border border-slate-800/80 rounded-2xl p-5 shadow-sm col-span-2 lg:col-span-1">
+          <div className="bg-sky-500/10 border border-sky-500/20 rounded-2xl p-5 shadow-sm col-span-2 lg:col-span-1">
             <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">ลาพักร้อน/ป่วย</p>
             <div className="flex items-baseline gap-2 mt-3">
               <span className="text-2xl font-bold text-sky-400">{leave}</span>
@@ -274,31 +274,49 @@ export default function AdminDashboard() {
               </div>
 
               {/* Department Filter */}
-              <select
-                value={deptFilter}
-                onChange={(e) => setDeptFilter(e.target.value)}
-                className="px-4 py-2 rounded-xl bg-slate-950 border border-slate-800 text-sm text-slate-300 focus:outline-none focus:border-indigo-500 cursor-pointer"
-              >
-                <option value="All">ทุกแผนก (All)</option>
-                <option value="Engineering">Engineering</option>
-                <option value="HR">HR</option>
-                <option value="Marketing">Marketing</option>
-                <option value="Sales">Sales</option>
-                <option value="Design">Design</option>
-              </select>
+              <div className="relative w-full md:w-44 bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 flex items-center justify-center gap-2 focus-within:border-indigo-500 transition-colors">
+                <span className="text-sm text-slate-300 font-medium">
+                  {deptFilter === 'All' ? 'ทุกแผนก (All)' : deptFilter}
+                </span>
+                <svg className="w-4 h-4 text-slate-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+                <select
+                  value={deptFilter}
+                  onChange={(e) => setDeptFilter(e.target.value)}
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                >
+                  <option className="text-center" value="All">ทุกแผนก (All)</option>
+                  <option className="text-center" value="Engineering">Engineering</option>
+                  <option className="text-center" value="HR">HR</option>
+                  <option className="text-center" value="Marketing">Marketing</option>
+                  <option className="text-center" value="Sales">Sales</option>
+                  <option className="text-center" value="Design">Design</option>
+                </select>
+              </div>
 
               {/* Status Filter */}
-              <select
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
-                className="px-4 py-2 rounded-xl bg-slate-950 border border-slate-800 text-sm text-slate-300 focus:outline-none focus:border-indigo-500 cursor-pointer"
-              >
-                <option value="All">ทุกสถานะ (All)</option>
-                <option value="Present">มาทำงานตรงเวลา</option>
-                <option value="Late">มาสาย</option>
-                <option value="Absent">ขาดงาน</option>
-                <option value="On Leave">ลาพักร้อน</option>
-              </select>
+              <div className="relative w-full md:w-44 bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 flex items-center justify-center gap-2 focus-within:border-indigo-500 transition-colors">
+                <span className="text-sm text-slate-300 font-medium">
+                  {{
+                    'All': 'ทุกสถานะ (All)',
+                    'Present': 'มาทำงานตรงเวลา',
+                    'Late': 'มาสาย',
+                    'Absent': 'ขาดงาน',
+                    'On Leave': 'ลาพักร้อน'
+                  }[statusFilter] || statusFilter}
+                </span>
+                <svg className="w-4 h-4 text-slate-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+                <select
+                  value={statusFilter}
+                  onChange={(e) => setStatusFilter(e.target.value)}
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                >
+                  <option className="text-center" value="All">ทุกสถานะ (All)</option>
+                  <option className="text-center" value="Present">มาทำงานตรงเวลา</option>
+                  <option className="text-center" value="Late">มาสาย</option>
+                  <option className="text-center" value="Absent">ขาดงาน</option>
+                  <option className="text-center" value="On Leave">ลาพักร้อน</option>
+                </select>
+              </div>
 
             </div>
           </div>
@@ -306,8 +324,8 @@ export default function AdminDashboard() {
           {/* Table Container */}
           <div className="overflow-x-auto">
             <table className="w-full border-collapse text-left min-w-[900px]">
-              <thead>
-                <tr className="border-b border-slate-800 text-xs font-semibold text-slate-500 uppercase tracking-wider">
+              <thead className="bg-slate-950/50 text-slate-400 border-b border-slate-700">
+                <tr className="border-b border-slate-700 text-xs font-semibold text-slate-500 uppercase tracking-wider">
                   <th className="py-4 px-4">รหัสพนักงาน</th>
                   <th className="py-4 px-4">ชื่อพนักงาน</th>
                   <th className="py-4 px-4">แผนก / ตำแหน่ง</th>
@@ -318,10 +336,10 @@ export default function AdminDashboard() {
                   <th className="py-4 px-4 text-center">สถานะรวม</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800/60 text-sm">
+              <tbody className="text-sm">
                 {filteredLogs.length > 0 ? (
                   filteredLogs.map((log) => (
-                    <tr key={log.id} className="hover:bg-slate-850/35 transition">
+                    <tr key={log.id} className="hover:bg-slate-800/20 transition border-b border-slate-700">
                       <td className="py-4 px-4 font-mono text-slate-400 font-semibold">{log.id}</td>
                       <td className="py-4 px-4">
                         <div className="flex items-center gap-3">

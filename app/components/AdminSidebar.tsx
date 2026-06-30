@@ -111,10 +111,10 @@ export function AdminSidebar({ activePath, userId, isPending = false }: AdminSid
         <div className="flex items-center justify-between w-full mb-8">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center font-bold text-white shadow-md">
-              A
+              C
             </div>
             <div>
-              <h2 className="font-extrabold tracking-tight text-md">AttendHub</h2>
+              <h2 className="font-extrabold tracking-tight text-md">chek-in</h2>
               <span className="text-xs text-slate-500 font-semibold uppercase tracking-wider">แผงควบคุมแอดมิน</span>
             </div>
           </div>
